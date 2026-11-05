@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-44495\n摘要：axios Vulnerable to Credential Theft and Response Hijacking via Prototype Pollution Gadget in Config Merge"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 2321,
+ "recorded_at": "2026-11-02T14:52:08+0800",
+ "response": {
+  "id": "chatcmpl-ae01f425a9bb6c0f",
+  "object": "chat.completion",
+  "created": 1793603406,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2026-44495 axios 利用 PoC 函数\", \"CVE-2026-44495 axios exploit PoC trigger function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要确保中文查询不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含 CVE 编号或包名。最好包含 CVE-2026-44495 和 axios。目标：判断是否已被利用、有无公开 PoC、触发需要调用哪个函数。查询词应适合搜索引擎。\n\n中文：例如 \"CVE-2026-44495 axios 利用 PoC 触发函数\" 字数？中文字符：CVE-2026-44495 算? 通常按字符? 用户说字/词，中文不超过30个字。这个字符串包含英文数字，但整体短。可以：\"CVE-2026-44495 axios 在野利用 PoC 触发函数\" 长度大概 30? 数：CVE(3)+-1+2026(4)+-1+44495(5)=15? 加空格? 中文：axios 5? 在野利用4? PoC3? 触发函数4? 总可能超? 但“各不超过30个字/词”宽松。可以短：\"CVE-2026-44495 axios PoC 利用 函数\" 包含。中文查询：\"CVE-2026-44495 axios 利用 PoC 函数\" 短。\n\n英文：需要不超过30 words。 \"CVE-2026-44495 axios exploit PoC trigger function\" 6 words. 包含 CVE. 好。\n\n只输出JSON。确保合法JSON。中文引号? 用双引号。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 173,
+   "total_tokens": 671,
+   "completion_tokens": 498,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

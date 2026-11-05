@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-67319\n摘要：Axios: Nested axios option objects can consume polluted prototype values"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 6229,
+ "recorded_at": "2026-11-02T14:57:51+0800",
+ "response": {
+  "id": "chatcmpl-b7e7bcd873b0aba0",
+  "object": "chat.completion",
+  "created": 1793603744,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"axios CVE-2026-67319 PoC利用函数\", \"CVE-2026-67319 axios PoC exploited function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n需要构造查询。包 npm/axios 1.7.4，漏洞 CVE-2026-67319，摘要：Axios: Nested axios option objects can consume polluted prototype values。目标：判断是否已被利用、有无公开 PoC、触发需要调用哪个函数。查询词要适合搜索引擎，包含 CVE 编号或包名。中文一条不超过30个字，英文一条不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。需要包含 CVE 编号或包名。最好中文包含 CVE-2026-67319 和 axios，查询利用/PoC/函数。英文包含 CVE-2026-67319 axios PoC exploited function。\n\n需要只输出 JSON。确保合法 JSON。中文查询长度：例如 \"CVE-2026-67319 axios 原型污染 利用 PoC 触发函数\" 字数？中文字符：CVE-2026-67319 算? 用户说字/词，可能中文按字符。需要不超过30个字。我们可简短：\"CVE-2026-67319 axios 利用 PoC 函数\" 长度：CVE(3)+-1+2026(4)+-1+67319(5)=15? 加空格? 中文“axios”5，利用2，PoC3，函数2，空格若干。总字符可能 15+1+5+1+2+1+3+1+2=31? 如果算字符可能超。用中文更短：\"axios CVE-2026-67319 PoC 利用 函数\" 字符：axios5 + space1 + CVE-2026-67319 15 + space1 + PoC3 + space1 + 利用2 + space1 + 函数2 =31? 5+1+15+1+3+1+2+1+2=31。超1。去掉空格？搜索引擎查询词可以无空格？中文英文混合：\"axios CVE-2026-67319 PoC利用函数\" 字符：5+1+15+3+2+2=28? axios(5) space(1) CVE-2026-67319(15) PoC(3) 利用(2) 函数(2)=28。可以。但“PoC利用函数”可能不够自然，但查询词可以。包含 CVE 和包名。\n\n英文查询不超过30个词。例如 \"CVE-2026-67319 axios prototype pollution PoC exploited function\" 词数：CVE-2026-67319(1) axios(2) prototype(3) pollution(4) PoC(5) exploited(6) function(7). 很好。包含 CVE 和包名。\n\n中文也可以：\"axios CVE-2026-67319 原型污染 PoC 利用函数\" 字符：axios5 + space1 + CVE...15 + space1 + 原型污染4 + space1 + PoC3 + space1 + 利用函数4 =35? 5+1+15+1+4+1+3+1+4=35。超。需要短。\"axios CVE-2026-67319 PoC 利用函数\" 31? 上面算31。若去掉空格：\"axios CVE-2026-67319 PoC利用函数\" 28。可以。或者 \"CVE-2026-67319 axios PoC利用函数\" 字符：15+1+5+3+2+2=28。包含 CVE 和包名。中文查询词：\"CVE-2026-67319 axios PoC利用函数\"。是否中文？混合，但可接受。用户要求一条中文，一条英文。中文查询可以包含英文包名和CVE。也可以 \"axios CVE-2026-67319 利用PoC函数\" 字符：5+1+15+1+2+3+2=29? axios5 space1 CVE15 space1 利用2 PoC3 函数2 =29。可以。但“利用PoC函数”不太自然。\"axios CVE-2026-67319 PoC 利用\" 字符：5+1+15+1+3+1+2=28。但没函数。需要触发需要调用哪个函数，查询词可包含“函数”。\"axios CVE-2026-67319 PoC函数\" 字符：5+1+15+1+3+2=27。可以。中文查询：\"axios CVE-2026-67319 PoC函数\"。是否足够？搜索 PoC 函数。也可以 \"axios CVE-2026-67319 利用函数\" 字符：5+1+15+1+2+2=26。但没 PoC。目标包括是否已被利用、有无公开 PoC、触发函数。查询词可以组合。\"axios CVE-2026-67319 PoC利用函数\" 28，包含 PoC、利用、函数。好。\n\n英文：\"CVE-2026-67319 axios PoC exploited function\" 词数 6? CVE...1 axios2 PoC3 exploited4 function5. 可以。或 \"CVE-2026-67319 axios prototype pollution PoC function\" 7. 更具体。英文不超过30词。包含 CVE 和包名。\n\n最终 JSON only. 确保双引号。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 167,
+   "total_tokens": 1586,
+   "completion_tokens": 1419,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

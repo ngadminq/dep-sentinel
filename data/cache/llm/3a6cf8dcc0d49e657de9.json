@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "只输出 JSON。"
+   },
+   {
+    "role": "user",
+    "content": "返回 {\"ok\": true, \"model\": \"你的名字\"}"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 1022,
+ "recorded_at": "2026-11-02T14:30:22+0800",
+ "response": {
+  "id": "chatcmpl-bd49be8ffa481662",
+  "object": "chat.completion",
+  "created": 1793602101,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"ok\": true, \"model\": \"Qwen\"}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "用户要求“只输出 JSON”，并给出示例返回 {\"ok\": true, \"model\": \"你的名字\"}。需要仅输出 JSON，不包含额外文本。需要决定 model 字段。用户说“你的名字”，可能指助手名字。根据身份，我是通义千问/Qwen。可输出 {\"ok\": true, \"model\": \"Qwen\"} 或中文“通义千问”。示例是“你的名字”，更自然用“Qwen”或“通义千问”。由于开发者要求中文名称对外统一用“通义千问”或“Qwen”，但用户要求 JSON 值。选择 \"Qwen\" 简洁。必须只输出 JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 69,
+   "total_tokens": 225,
+   "completion_tokens": 156,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

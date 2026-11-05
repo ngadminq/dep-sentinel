@@ -1,0 +1,33 @@
+{
+ "request": {
+  "cves": [
+   "CVE-2020-11022",
+   "CVE-2020-11023"
+  ]
+ },
+ "elapsed_ms": 868,
+ "recorded_at": "2026-11-05T15:23:18+0800",
+ "response": {
+  "status": "OK",
+  "status-code": 200,
+  "version": "1.0",
+  "access": "public",
+  "total": 2,
+  "offset": 0,
+  "limit": 100,
+  "data": [
+   {
+    "cve": "CVE-2020-11023",
+    "epss": "0.848870000",
+    "percentile": "0.997120000",
+    "date": "2026-11-04"
+   },
+   {
+    "cve": "CVE-2020-11022",
+    "epss": "0.992150000",
+    "percentile": "0.999340000",
+    "date": "2026-11-04"
+   }
+  ]
+ }
+}

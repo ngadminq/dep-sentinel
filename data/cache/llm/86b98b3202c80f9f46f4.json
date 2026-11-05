@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：PyPI/Jinja2 2.10\n漏洞：CVE-2024-34064\n摘要：Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 3478,
+ "recorded_at": "2026-11-02T17:04:00+0800",
+ "response": {
+  "id": "chatcmpl-aacfb2daab0ccc73",
+  "object": "chat.completion",
+  "created": 1793611316,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\":[\"CVE-2024-34064 Jinja2 xmlattr 利用 PoC 函数\",\"CVE-2024-34064 Jinja2 xmlattr exploited PoC function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n需要确保每条不超过30个字/词。中文按字？英文按词？最好短。包含CVE编号或包名。目标：判断是否已被利用、有无公开PoC、触发需要调用哪个函数。查询词应能检索利用/PoC/函数。\n\n中文查询：包含 CVE-2024-34064 或 Jinja2。例如：“CVE-2024-34064 Jinja2 xmlattr 利用 PoC 函数” 字数？中文字符：CVE-2024-34064 算？通常英文串可能按词？要求不超过30个字/词。安全起见短：“CVE-2024-34064 Jinja2 xmlattr PoC 函数” 词数：CVE-2024-34064(1?) Jinja2(1) xmlattr(1) PoC(1) 函数(1) 共5词，字符也短。中文查询需要中文？可以包含中文“函数”。但“一条中文”可能希望中文查询。可用：“CVE-2024-34064 Jinja2 xmlattr 利用 PoC 函数” 中文词：利用、PoC、函数，英文包名/CVE。长度短。\n\n英文查询：包含 CVE或包名，检索 exploited PoC function。例如：“CVE-2024-34064 Jinja2 xmlattr exploited PoC function” 词数：CVE-2024-34064(1) Jinja2(1) xmlattr(1) exploited(1) PoC(1) function(1) =6 words. Good.\n\nNeed only JSON. Ensure valid JSON. Could use double quotes. Final:\n{\"queries\":[\"CVE-2024-34064 Jinja2 xmlattr 利用 PoC 函数\",\"CVE-2024-34064 Jinja2 xmlattr exploited PoC function\"]}\n\nCheck Chinese length: “CVE-2024-34064 Jinja2 xmlattr 利用 PoC 函数” If counting Chinese characters: 利用(2) 函数(2) plus English tokens. Under 30. Good.\n\nNeed maybe “触发需要调用哪个函数” query could include “xmlattr filter function” but enough. Maybe better: “CVE-2024-34064 Jinja2 xmlattr 触发函数 PoC” 中文。英文: “CVE-2024-34064 Jinja2 xmlattr PoC exploit function”. Both short.\n\nNeed only JSON no markdown.\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 173,
+   "total_tokens": 880,
+   "completion_tokens": 707,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

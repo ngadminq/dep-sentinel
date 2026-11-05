@@ -1,0 +1,9 @@
+{
+  "title": "PyYAML FullLoader 解析用户上传",
+  "min_level": {
+    "CVE-2020-14343": "yellow"
+  },
+  "reachable": [
+    "CVE-2020-14343"
+  ]
+}

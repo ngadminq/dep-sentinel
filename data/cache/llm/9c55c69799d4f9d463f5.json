@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-42036\n摘要：Axios: HTTP adapter streamed responses bypass maxContentLength"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 3794,
+ "recorded_at": "2026-11-02T15:06:03+0800",
+ "response": {
+  "id": "chatcmpl-b630bbc1d956751c",
+  "object": "chat.completion",
+  "created": 1793604238,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2026-42036 axios 利用 PoC 函数\", \"CVE-2026-42036 axios exploit PoC function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要构造查询。包 npm/axios 1.7.4，漏洞 CVE-2026-42036，摘要 Axios: HTTP adapter streamed responses bypass maxContentLength。\n\n要求：一条中文、一条英文，各不超过30个字/词。包含 CVE 编号或包名。最好包含 CVE 和 axios。中文查询不超过30个中文字？“各不超过 30 个字/词”可能中文按字，英文按词。需要简短。\n\n中文：CVE-2026-42036 axios 利用 PoC maxContentLength 流式响应\n计数：CVE-2026-42036 可能算？中文字数：Axios? 英文词？需要不超过30字。可以：CVE-2026-42036 axios 利用 PoC maxContentLength\n中文里包含英文，可能按字符？安全起见短：CVE-2026-42036 axios 利用 PoC\n英文：CVE-2026-42036 axios PoC maxContentLength\n英文词数：CVE-2026-42036(1?) axios(2) PoC(3) maxContentLength(4) 不超过30词。\n\n需要判断是否已被利用、有无公开PoC、触发需要调用哪个函数。查询词可以包含 exploit PoC function? 但只两条。中文可包含“调用函数”？例如：CVE-2026-42036 axios 利用 PoC 函数\n英文：CVE-2026-42036 axios exploit PoC function\n但英文词数5。中文：CVE-2026-42036 axios 利用 PoC 函数。包含CVE和包名。\n\n是否要更针对触发函数：axios HTTP adapter streamed responses maxContentLength。查询：CVE-2026-42036 axios maxContentLength PoC\n中文：CVE-2026-42036 axios maxContentLength 利用 PoC\n英文：CVE-2026-42036 axios maxContentLength PoC exploit\n但英文词数5。\n\n只输出JSON。确保合法。中文查询不超过30字：CVE-2026-42036 axios maxContentLength 利用 PoC。字符可能：CVE-2026-42036 (14?) axios 5, maxContentLength 14, 利用2, PoC3 total maybe 38 if characters. But “字/词” likely Chinese characters and English words? To be safe shorter: CVE-2026-42036 axios 利用 PoC\nThis includes CVE and package. English: CVE-2026-42036 axios exploit PoC\nMaybe enough. But user wants trigger function. Could include “函数” in Chinese: CVE-2026-42036 axios 利用 PoC 函数\nEnglish: CVE-2026-42036 axios exploit PoC function\nThis is 5 words. Good.\n\nNeed only JSON. Final.\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 166,
+   "total_tokens": 984,
+   "completion_tokens": 818,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

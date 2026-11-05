@@ -1,0 +1,26 @@
+{
+ "request": {
+  "cves": [
+   "CVE-2020-14343"
+  ]
+ },
+ "elapsed_ms": 683,
+ "recorded_at": "2026-11-05T15:23:19+0800",
+ "response": {
+  "status": "OK",
+  "status-code": 200,
+  "version": "1.0",
+  "access": "public",
+  "total": 1,
+  "offset": 0,
+  "limit": 100,
+  "data": [
+   {
+    "cve": "CVE-2020-14343",
+    "epss": "0.062400000",
+    "percentile": "0.935710000",
+    "date": "2026-11-04"
+   }
+  ]
+ }
+}

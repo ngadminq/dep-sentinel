@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：PyPI/PyYAML 5.3.1\n漏洞：CVE-2020-14343\n摘要：Improper Input Validation in PyYAML"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 5007,
+ "recorded_at": "2026-11-03T20:12:17+0800",
+ "response": {
+  "id": "chatcmpl-8f0259b1d05c99a8",
+  "object": "chat.completion",
+  "created": 1793709015,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2020-14343 PyYAML PoC 触发\", \"CVE-2020-14343 PyYAML exploit PoC function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要确保中文查询不超过30个字，英文不超过30个词？用户说各不超过30个字/词。中文按字，英文按词。包含CVE编号或包名。最好包含CVE-2020-14343和PyYAML。\n\n中文查询：例如 \"CVE-2020-14343 PyYAML 利用 PoC 触发函数\" 字数？中文字符：CVE-2020-14343 算？通常英文数字串可能算字符，但保守短。 \"CVE-2020-14343 PyYAML 利用 PoC 函数\" 包含。长度：CVE(3)+-? 可能算字符。总字符：CVE-2020-14343 15? C V E - 2 0 2 0 - 1 4 3 4 3 =15, 空格1, PyYAML 6, 空格1, 利用2, 空格1, PoC3, 空格1, 函数2 =32? 可能超30字。需要更短。\n\n中文查询可：\"CVE-2020-14343 PyYAML PoC 触发\" 字符：15+1+6+1+3+1+2=29? 如果按中文字/英文单词？ \"CVE-2020-14343\" 可能算1个词？但安全。 29字符。包含CVE和包名。表达是否已被利用、PoC、触发函数？ \"触发\" 暗示函数。可以。\n\n英文查询：\"CVE-2020-14343 PyYAML exploit PoC function\" 词数：CVE-2020-14343(1) PyYAML(2) exploit(3) PoC(4) function(5) <=30. 包含。\n\n只输出JSON。确保合法JSON。中文查询里包含英文和数字，没问题。\n\n检查中文不超过30个字/词：如果按“字”包括英文字母？ \"CVE-2020-14343 PyYAML PoC 触发\" 字符数：C1 V2 E3 -4 2 5 0 6 2 7 0 8 -9 1 10 4 11 3 12 4 13 3 14? Wait count: \"CVE-2020-14343\": C(1) V2 E3 -4 2 5 0 6 2 7 0 8 -9 1 10 4 11 3 12 4 13 3 14? Actually CVE=3, hyphen=1 =>4, 2020=4 =>8, hyphen=1=>9, 14343=5=>14. Yes 14. space 15. PyYAML: P16 y17 Y18 a19 m20 l21? Wait PyYAML length 6: P16 y17 Y18 a19 m20 l21. space22. PoC: P23 o24 C25. space26. 触27 发28. Total 28 characters. Good.\n\nBut if Chinese “字” means Chinese characters only? Then 2 Chinese chars, fine. If words: CVE-2020-14343 (1), PyYAML(2), PoC(3), 触发(4) fine.\n\n英文词数：CVE-2020-14343 (1), PyYAML (2), exploit (3), PoC (4), function (5). Good.\n\nNeed maybe include \"in-the-wild\" to judge exploited? But query length okay. \"CVE-2020-14343 PyYAML exploit PoC function\" good.\n\nFinal only JSON.\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 166,
+   "total_tokens": 1188,
+   "completion_tokens": 1022,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

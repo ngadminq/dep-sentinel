@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-40175\n摘要：Axios has Unrestricted Cloud Metadata Exfiltration via Header Injection Chain"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 3578,
+ "recorded_at": "2026-11-02T14:59:48+0800",
+ "response": {
+  "id": "chatcmpl-89d51de76ff0639c",
+  "object": "chat.completion",
+  "created": 1793603865,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"axios CVE-2026-40175 利用 PoC 函数\", \"axios CVE-2026-40175 PoC exploit function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要确保中文查询不超过30个字？英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含 CVE 编号或包名。漏洞 CVE-2026-40175，包 npm/axios 1.7.4。摘要：Axios has Unrestricted Cloud Metadata Exfiltration via Header Injection Chain。\n\n需要设计查询词，用于判断是否已被利用、有无公开 PoC、触发需要调用哪个函数。可以一条中文，一条英文。\n\n中文查询要包含 CVE 或包名，且不超过30字。比如：“CVE-2026-40175 axios 利用 PoC 触发函数” 字数？中文字符：CVE-2026-40175 算? 通常英文数字可能按字符？要求不超过30个字/词，中文查询可以短。 “axios CVE-2026-40175 PoC 利用 函数” 包含包名和CVE。字数：axios(5? 英文单词?) 如果按字可能5，CVE-2026-40175 14? 总可能20多。安全。\n\n英文查询不超过30词。比如：“axios CVE-2026-40175 PoC exploit header injection function” 词数：axios 1, CVE-2026-40175 2, PoC 3, exploit 4, header 5, injection 6, function 7. 很好。\n\n但需要“触发需要调用哪个函数”，查询词可包含 “function” 或 “call”。中文可包含“调用函数”。例如：“axios CVE-2026-40175 利用 PoC 调用函数” 词/字：axios(5) CVE-2026-40175(14?) 利用(2) PoC(3) 调用(2) 函数(2) 总28? 如果按字符可能30左右。更短：“axios CVE-2026-40175 PoC 函数” 包含包名和CVE，但没利用。可以：“axios CVE-2026-40175 利用 PoC 函数” 字符：axios 5 + space? 不计? CVE-2026-40175 14 + 利用2 + PoC3 + 函数2 =26 plus spaces? 应该不超过30。\n\n英文：“axios CVE-2026-40175 PoC exploit function” 6 words.\n\n只输出JSON。确保合法JSON。不要额外文本。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 169,
+   "total_tokens": 886,
+   "completion_tokens": 717,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

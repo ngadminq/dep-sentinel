@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：Maven/org.apache.logging.log4j:log4j-core 2.14.1\n漏洞：CVE-2026-34479\n摘要：Apache Log4j 1 to Log4j 2 bridge: silent log event loss in Log4j1XmlLayout due to unescaped XML 1.0 forbidden characters"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 5347,
+ "recorded_at": "2026-11-02T14:44:03+0800",
+ "response": {
+  "id": "chatcmpl-b31abfa4a23317f2",
+  "object": "chat.completion",
+  "created": 1793602917,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2026-34479 log4j PoC 触发函数\", \"CVE-2026-34479 log4j-core PoC exploit trigger function Log4j1XmlLayout\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：设计2条搜索引擎查询词，一条中文一条英文，各不超过30个字/词，包含CVE编号或包名。只输出JSON。\n\n任务：安全情报检索员，判断依赖漏洞是否已被利用、有无公开PoC、触发需要调用哪个函数。包：Maven/org.apache.logging.log4j:log4j-core 2.14.1；漏洞：CVE-2026-34479；摘要：Apache Log4j 1 to Log4j 2 bridge: silent log event loss in Log4j1XmlLayout due to unescaped XML 1.0 forbidden characters。\n\n需要生成查询词。中文不超过30个字，英文不超过30个词。包含CVE编号或包名。最好针对利用/PoC/触发函数。中文可包含 CVE-2026-34479 和 log4j-core 或 Log4j1XmlLayout。英文可包含 CVE-2026-34479 PoC exploit function。\n\n注意 CVE-2026-34479 可能是虚构/未来？但按给定。查询词要适合搜索引擎。中文：CVE-2026-34479 log4j-core PoC 利用 触发函数？字数：CVE-2026-34479 (14? 中文字数按字符? 用户说字/词，中文不超过30个字。英文不超过30个词。中文查询词可以包含英文字符，通常按字符算。需要确保不超过30个字符？ “CVE-2026-34479 log4j-core PoC 利用 触发函数” 字符数：CVE-2026-34479 14? C V E - 2 0 2 6 - 3 4 4 7 9 =14, space 1, log4j-core 10, space1, PoC3, space1, 利用2, space1, 触发函数4 =37? 超过30。需要更短。\n\n中文查询词：CVE-2026-34479 log4j PoC 利用 函数？字符：14+1+5+1+3+1+2+1+2=30? 计算：CVE-2026-34479=14, space=1 (15), log4j=5 (20), space=1 (21), PoC=3 (24), space=1 (25), 利用=2 (27), space=1 (28), 函数=2 (30). 正好30。包含CVE编号和包名? 包名是 log4j-core，但查询词包含 log4j 不是完整包名。用户要求包含 CVE 编号或包名，包含CVE即可。可以。\n\n但为了更相关，中文：CVE-2026-34479 log4j-core PoC 利用？字符：14+1+10+1+3+1+2=32? 14+1=15, log4j-core=10 ->25, space=26, PoC=29, space=30, 利用=32. 超。\n\n中文：CVE-2026-34479 log4j PoC 触发函数？ 14+1+5+1+3+1+4=29? 触发函数4，总29。好。包含CVE，log4j，PoC，触发函数。\n\n英文：不超过30 words。可以：CVE-2026-34479 log4j-core PoC exploit trigger function Log4j1XmlLayout? 词数：CVE-2026-34479(1) log4j-core(2) PoC(3) exploit(4) trigger(5) function(6) Log4j1XmlLayout(7). 很好。包含CVE和包名。也可以加 \"in use\" 但无需。\n\n只输出 JSON。确保合法 JSON。中文查询词不超过30字/词？ “CVE-2026-34479 log4j PoC 触发函数” 如果按中文“字”可能英文单词算词？ 但安全起见短。也可以中文：CVE-2026-34479 log4j PoC 利用 函数 29? 上面。选择“CVE-2026-34479 log4j PoC 触发函数”。\n\n英文：CVE-2026-34479 log4j-core PoC exploit trigger function Log4j1XmlLayout\n\n最终 JSON:\n{\"queries\": [\"CVE-2026-34479 log4j PoC 触发函数\", \"CVE-2026-34479 log4j-core PoC exploit trigger function Log4j1XmlLayout\"]}\n\n检查英文词数：7。中文长度：如果按字符：CVE-2026-34479 14, space 1, log4j 5, space1, PoC3, space1, 触发函数4 =29? 14+1=15+5=20+1=21+3=24+1=25+4=29. 好。\n\n只输出 JSON，无其他。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 202,
+   "total_tokens": 1483,
+   "completion_tokens": 1281,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

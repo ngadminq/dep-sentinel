@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/flatmap-stream 0.1.1\n漏洞：GHSA-mh6f-8j2x-4483\n摘要：Critical severity vulnerability that affects event-stream and flatmap-stream"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 5236,
+ "recorded_at": "2026-11-02T14:51:20+0800",
+ "response": {
+  "id": "chatcmpl-abc2392d1b9e5c9f",
+  "object": "chat.completion",
+  "created": 1793603355,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"flatmap-stream 漏洞 利用 PoC 调用函数\", \"flatmap-stream GHSA-mh6f-8j2x-4483 PoC exploited call function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n包：npm/flatmap-stream 0.1.1\n漏洞：GHSA-mh6f-8j2x-4483\n摘要：Critical severity vulnerability that affects event-stream and flatmap-stream\n\n需要生成查询词。必须包含 CVE 编号或包名。这里没有 CVE，只有 GHSA。用户说包含 CVE 编号或包名，所以可用包名 flatmap-stream 或 event-stream。漏洞摘要提到 event-stream 和 flatmap-stream。GHSA-mh6f-8j2x-4483 可能对应 event-stream 供应链攻击？实际上 event-stream 恶意代码 CVE-2018-1000538? GHSA-mh6f-8j2x-4483? 需要谨慎。查询词要判断是否已被利用、有无公开 PoC、触发需要调用哪个函数。中文一条，英文一条，各不超过30个字/词。中文“字”可能中文字符，英文“词”可能 words。需要简短。\n\n中文查询可包含包名和关键词：flatmap-stream GHSA-mh6f-8j2x-4483 利用 PoC 函数。字数？flatmap-stream 算? 中文不超过30字，英文词不超过30词。可以：flatmap-stream GHSA-mh6f-8j2x-4483 利用 PoC 函数。字符数：flatmap-stream 14? GHSA... 19? 利用2 PoC3 函数2 空格? 总可能超过30字？如果按中文字符+英文单词？用户说各不超过30个字/词，中文按字，英文按词。中文查询里包含英文包名和GHSA，可能算字？安全起见短一点。\n\n中文：flatmap-stream 漏洞 利用 PoC 函数。包含包名。字数：flatmap-stream (14 chars) + 空格 + 漏洞2 + 空格 + 利用2 + 空格 + PoC3 + 空格 + 函数2 = 26? 如果英文单词算词？中文“字”可能字符，14+2+3+2=21 plus spaces 4 =25. OK.\n\n英文：flatmap-stream GHSA-mh6f-8j2x-4483 PoC exploited function? 词数：flatmap-stream(1) GHSA-mh6f-8j2x-4483(1) PoC(1) exploited(1) function(1) =5 words. 包含包名和GHSA。也可 event-stream flatmap-stream PoC exploited function. 但需要触发调用哪个函数，查询词可包含 \"function\" 或 \"call\". 英文：flatmap-stream GHSA-mh6f-8j2x-4483 PoC exploited function. 5 words.\n\n但用户要求“包含 CVE 编号或包名”。英文包含包名。中文包含包名。可以。\n\n是否要更针对“触发需要调用哪个函数”？中文：flatmap-stream 漏洞 利用 PoC 调用函数。英文：flatmap-stream GHSA-mh6f-8j2x-4483 PoC exploited call function. 词数 6? flatmap-stream(1) GHSA...(1) PoC(1) exploited(1) call(1) function(1)=6. OK.\n\n只输出 JSON。确保合法 JSON。中文查询不要有引号问题。\n\n最终：{\"queries\": [\"flatmap-stream 漏洞 利用 PoC 调用函数\", \"flatmap-stream GHSA-mh6f-8j2x-4483 PoC exploited call function\"]}\n\n检查中文长度：flatmap-stream 14, 漏洞2, 利用2, PoC3, 调用2, 函数2 =25 chars plus 4 spaces=29. OK. 英文词数 6. 包含包名。\n\n但“各不超过30个字/词”英文是词，6词。中文如果按“字”可能英文单词算字？ flatmap-stream 可能14字，GHSA没有。总29。OK.\n\n是否应该包含 GHSA 在中文？可以但不必要。用户说包含 CVE 编号或包名，包名足够。为了情报检索，GHSA 更精确。中文可：flatmap-stream GHSA-mh6f-8j2x-4483 PoC 函数。长度：14+19+3+2 + spaces 3 =41? 超。不要。\n\n最终只 JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 172,
+   "total_tokens": 1301,
+   "completion_tokens": 1129,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

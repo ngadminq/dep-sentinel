@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-44488\n摘要：Allocation of Resources Without Limits or Throttling in Axios"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 1695,
+ "recorded_at": "2026-11-02T14:57:17+0800",
+ "response": {
+  "id": "chatcmpl-903a6a7efdeacd85",
+  "object": "chat.completion",
+  "created": 1793603715,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2026-44488 axios 利用 PoC 触发函数\", \"CVE-2026-44488 axios exploit PoC trigger function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。只输出 JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要生成两条查询。包 npm/axios 1.7.4，漏洞 CVE-2026-44488，摘要 Allocation of Resources Without Limits or Throttling in Axios。\n\n中文查询不超过30个字，包含 CVE 或包名。英文不超过30个词，包含 CVE 或包名。需要聚焦是否被利用、公开 PoC、触发函数。\n\n中文例如：\"CVE-2026-44488 axios 利用 PoC 触发函数\" 字数？中文字符：CVE-2026-44488 算? 用户说字/词，中文不超过30个字。可以短。包含 CVE。查询词：\"CVE-2026-44488 axios 利用 PoC 触发函数\" 长度约 25? 可以。\n\n英文：\"CVE-2026-44488 axios exploit PoC function\" 词数 6? 包含 CVE。也可 \"axios CVE-2026-44488 exploited PoC trigger function\" 7 words.\n\n只输出 JSON。确保合法 JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 166,
+   "total_tokens": 539,
+   "completion_tokens": 373,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

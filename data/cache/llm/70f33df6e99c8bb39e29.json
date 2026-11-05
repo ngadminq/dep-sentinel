@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：PyPI/PyYAML 5.3\n漏洞：CVE-2020-14343\n摘要：Improper Input Validation in PyYAML"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 1747,
+ "recorded_at": "2026-11-02T14:50:24+0800",
+ "response": {
+  "id": "chatcmpl-8ebce3d7e7096c3e",
+  "object": "chat.completion",
+  "created": 1793603302,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2020-14343 PyYAML 利用 PoC 函数\", \"CVE-2020-14343 PyYAML exploit PoC function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。只输出 JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要确保中文查询不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含 CVE 编号或包名。最好包含 CVE-2020-14343 和 PyYAML。中文可写：“CVE-2020-14343 PyYAML 5.3 利用 PoC 触发函数” 字数？中文字符：CVE? 英文字母算字？通常搜索引擎查询词长度可能按字符？为安全，简短。中文：“CVE-2020-14343 PyYAML 利用 PoC 函数” 包含 CVE 和包名。英文：“CVE-2020-14343 PyYAML exploit PoC function” 词数 6。需要 JSON only.\n\n检查中文是否不超过30个字/词：CVE-2020-14343 (1? 如果按词) PyYAML (1) 利用(1) PoC(1) 函数(1) 共5词，字符也短。可以。\n英文：“CVE-2020-14343 PyYAML exploit PoC function” 6 words. Good.\n\n只输出 JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 164,
+   "total_tokens": 575,
+   "completion_tokens": 411,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

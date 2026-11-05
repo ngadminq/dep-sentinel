@@ -1,0 +1,10 @@
+{
+ "ecosystem": "npm",
+ "package": "lodash",
+ "cve": "CVE-2019-10744",
+ "vulnerable_version": "4.17.11",
+ "fixed_version": "4.17.21",
+ "attack": "attack.js",
+ "test": "selftest.js",
+ "expect": {"vulnerable": "EXPLOITED", "fixed": "BLOCKED", "test_fixed": "pass"}
+}

@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：Maven/org.apache.logging.log4j:log4j-core 2.14.1\n漏洞：CVE-2021-45105\n摘要：Apache Log4j2 vulnerable to Improper Input Validation and Uncontrolled Recursion"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 4210,
+ "recorded_at": "2026-11-02T14:45:28+0800",
+ "response": {
+  "id": "chatcmpl-ad5985192ecba67c",
+  "object": "chat.completion",
+  "created": 1793603003,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2021-45105 利用 PoC 触发函数\", \"CVE-2021-45105 exploited PoC trigger function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n需要确保中文查询不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含 CVE 编号或包名。最好包含 CVE-2021-45105 和 log4j-core 或 log4j。目标：是否已被利用、公开 PoC、触发调用哪个函数。可以设计：\n中文：\"CVE-2021-45105 log4j-core 利用 PoC 触发函数\" 字数？中文字符：CVE-2021-45105 算? 通常英文/数字可能按字符？为安全短一点。\"CVE-2021-45105 log4j-core 利用 PoC 函数\" 可能 20多。包含包名和CVE。\n英文：\"CVE-2021-45105 log4j-core exploited PoC trigger function\" 词数：CVE-2021-45105(1) log4j-core(2) exploited(3) PoC(4) trigger(5) function(6). 很好。\n中文：\"CVE-2021-45105 log4j-core 利用 PoC 触发函数\" 如果按中文字数：CVE-2021-45105 可能15字符，log4j-core 10，利用2，PoC3，触发2，函数2，总34字符？但“字/词”可能中文按词？不确定。为了不超过30个字符，可以缩短：\"CVE-2021-45105 log4j 利用 PoC 函数\" 字符：CVE-2021-45105 15? C V E - 2 0 2 1 - 4 5 1 0 5 =15, space1, log4j 5, space1, 利用2, space1, PoC3, space1, 函数2 =31? 如果按字符可能31。需要更短。可以用包名 log4j-core 但更长。用户要求包含 CVE 编号或包名，可以只包含 CVE 编号。中文查询：\"CVE-2021-45105 利用 PoC 触发函数\" 字符：CVE-2021-45105 15 + space1 + 利用2 + space1 + PoC3 + space1 + 触发2 + space1 + 函数2 =28? 15+1=16, +2=18, +1=19, +3=22, +1=23, +2=25, +1=26, +2=28. 好。包含CVE。英文：\"CVE-2021-45105 exploited PoC trigger function\" 词数 6。也可以加 log4j? \"CVE-2021-45105 log4j PoC trigger function\" 6 words. 但目标判断是否已被利用、有无公开PoC、触发调用哪个函数。英文可：\"CVE-2021-45105 log4j exploited PoC trigger function\" 7 words. 中文：\"CVE-2021-45105 log4j 利用 PoC 触发函数\" 字符：15+1+5+1+2+1+3+1+2+1+2=34? 太长。用 \"CVE-2021-45105 利用 PoC 触发函数\" 28。英文：\"CVE-2021-45105 exploited PoC trigger function\" 6 words. 但英文没有包名，有CVE即可。用户说包含 CVE 编号或包名，满足。\n\n只输出JSON。确保合法JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 182,
+   "total_tokens": 1174,
+   "completion_tokens": 992,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

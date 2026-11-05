@@ -1,0 +1,9 @@
+{
+  "title": "axios 带 baseURL 却把用户传的地址交给它（CVE-2025-27152）",
+  "reachable": [
+    "CVE-2025-27152"
+  ],
+  "min_level": {
+    "CVE-2025-27152": "yellow"
+  }
+}

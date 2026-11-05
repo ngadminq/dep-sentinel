@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-42039\n摘要：Axios: unbounded recursion in toFormData causes DoS via deeply nested request data"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 3827,
+ "recorded_at": "2026-11-02T14:56:34+0800",
+ "response": {
+  "id": "chatcmpl-be6199f740562168",
+  "object": "chat.completion",
+  "created": 1793603670,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2026-42039 axios toFormData PoC 利用 函数\", \"CVE-2026-42039 axios toFormData PoC exploit function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n需要构造中文和英文查询，各不超过30个字/词。包含CVE编号或包名。目标：判断是否已被利用、有无公开PoC、触发需要调用哪个函数。可以包含关键词：CVE-2026-42039 axios toFormData PoC exploit 利用 函数。中文不超过30个中文字？“各不超过30 个字/词”可能中文按字，英文按词。需要安全。\n\n中文查询：CVE-2026-42039 axios toFormData 利用 PoC 函数？字数：CVE-2026-42039 算？通常查询词长度可能按字符？要求不超过30个字/词。中文：CVE-2026-42039 axios toFormData 利用 PoC 函数。字符数：CVE-2026-42039 (14?) axios 5, toFormData 10, 利用2, PoC3, 函数2，总约36字符，但“字/词”可能中文词？为保险短一点。\n\n中文：CVE-2026-42039 axios toFormData PoC 利用 函数。字符：14+1+5+1+10+1+3+1+2+1+2=41? 太长如果按字符。要求30个字/词，可能英文单词计数：CVE-2026-42039(1) axios(2) toFormData(3) PoC(4) 利用(5) 函数(6) 共6词，可以。中文“字”可能中文字数：利用函数4字，加上英文？不确定。最好简短。\n\n中文：CVE-2026-42039 axios toFormData PoC 函数。词数6，中文字2。英文：CVE-2026-42039 axios toFormData PoC exploit function. 词数7? CVE-2026-42039(1) axios(2) toFormData(3) PoC(4) exploit(5) function(6). 6词。包含CVE和包名。\n\n但用户要求“一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名”。可以中文包含CVE编号和包名。英文包含CVE编号和包名。\n\n只输出JSON。确保合法JSON。中文查询里可包含英文CVE和axios。比如 \"CVE-2026-42039 axios toFormData PoC 函数\"。英文 \"CVE-2026-42039 axios toFormData PoC exploit function\"。\n\n需要判断触发需要调用哪个函数：toFormData。查询包含 toFormData。是否已被利用：exploit/PoC/利用。中文“利用”表示被利用。英文“exploit”表示被利用。公开PoC：PoC。\n\n最终 JSON only.\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 172,
+   "total_tokens": 949,
+   "completion_tokens": 777,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

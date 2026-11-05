@@ -1,0 +1,33 @@
+{
+ "request": {
+  "cves": [
+   "CVE-2017-18349",
+   "CVE-2025-70974"
+  ]
+ },
+ "elapsed_ms": 774,
+ "recorded_at": "2026-11-05T15:23:21+0800",
+ "response": {
+  "status": "OK",
+  "status-code": 200,
+  "version": "1.0",
+  "access": "public",
+  "total": 2,
+  "offset": 0,
+  "limit": 100,
+  "data": [
+   {
+    "cve": "CVE-2025-70974",
+    "epss": "0.007460000",
+    "percentile": "0.549500000",
+    "date": "2026-11-04"
+   },
+   {
+    "cve": "CVE-2017-18349",
+    "epss": "0.388430000",
+    "percentile": "0.985920000",
+    "date": "2026-11-04"
+   }
+  ]
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：PyPI/Flask 1.0\n漏洞：CVE-2026-27205\n摘要：Flask session does not add `Vary: Cookie` header when accessed in some ways"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 10950,
+ "recorded_at": "2026-11-02T17:01:27+0800",
+ "response": {
+  "id": "chatcmpl-b8004a5168fa3cdf",
+  "object": "chat.completion",
+  "created": 1793611156,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2026-27205 Flask PoC 函数\", \"CVE-2026-27205 Flask exploit PoC function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要确保中文查询不超过30个字，英文不超过30个词？用户说各不超过30个字/词。中文按字，英文按词。包含CVE编号或包名。最好包含 CVE-2026-27205 和 Flask。需要查询是否被利用、PoC、触发函数。可以设计：\n中文：\"CVE-2026-27205 Flask Vary Cookie 利用 PoC 函数\" 字数？中文字符：CVE-2026-27205 算？通常英文/数字可能按字符？为安全，短一些。\"CVE-2026-27205 Flask PoC 触发函数\" 包含 CVE 和包名。中文字数：CVE-2026-27205 (15? 如果按字符) + Flask (5) + PoC (3) + 触发函数(4) 可能超？但“字/词”模糊。最好中文查询用中文词少：CVE-2026-27205 Flask 利用 PoC 函数。英文：\"CVE-2026-27205 Flask Vary Cookie PoC function\" 词数：CVE-2026-27205(1) Flask(2) Vary(3) Cookie(4) PoC(5) function(6) 小于30。中文：\"CVE-2026-27205 Flask 利用 PoC 函数\" 如果按词：CVE-2026-27205, Flask, 利用, PoC, 函数 =5词。若按字符可能 15+1+5+1+2+1+3+1+2? 约31? 需要更短。可以中文：\"CVE-2026-27205 Flask PoC 函数\" 字符：CVE-2026-27205 15? Flask 5, PoC 3, 函数2, spaces 3 =28? 如果按字符可能28。包含CVE和包名。是否表达利用/PoC/函数？PoC和函数。可以。\n英文：\"CVE-2026-27205 Flask PoC function\" 词数5。\n但用户要求判断“是否已被利用、有无公开 PoC、触发需要调用哪个函数”。查询词可以包含 exploit PoC function。中文：\"CVE-2026-27205 Flask exploit PoC 函数\" 字符可能：15+1+5+1+7+1+3+1+2=36? 超。英文：\"CVE-2026-27205 Flask exploit PoC function\" 词数6。中文可短：\"CVE-2026-27205 Flask PoC 函数\"。\n只输出JSON。确保合法JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 173,
+   "total_tokens": 942,
+   "completion_tokens": 769,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

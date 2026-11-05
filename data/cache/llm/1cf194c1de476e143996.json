@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/lodash 4.17.11\n漏洞：CVE-2020-28500\n摘要：Regular Expression Denial of Service (ReDoS) in lodash"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 1629,
+ "recorded_at": "2026-11-03T20:12:42+0800",
+ "response": {
+  "id": "chatcmpl-9c71bff47a3a708b",
+  "object": "chat.completion",
+  "created": 1793709044,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"lodash CVE-2020-28500 ReDoS PoC 利用 函数\", \"lodash CVE-2020-28500 ReDoS PoC exploited function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n需要确保中文查询不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含 CVE 编号或包名。最好包含 CVE-2020-28500 和 lodash。目标：是否已被利用、公开PoC、触发函数。中文可写：“CVE-2020-28500 lodash ReDoS 利用 PoC 触发函数” 字数？中文字符：CVE-2020-28500 算？通常查询词长度按字符？需要安全一点。中文：“lodash CVE-2020-28500 ReDoS PoC 利用 函数” 包含包名和CVE。英文：“lodash CVE-2020-28500 ReDoS PoC exploited function” 词数：lodash(1) CVE-2020-28500(2) ReDoS(3) PoC(4) exploited(5) function(6). 好。\n\n只输出JSON。不要额外。确保有效JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 170,
+   "total_tokens": 542,
+   "completion_tokens": 372,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

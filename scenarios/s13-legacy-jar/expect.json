@@ -1,0 +1,12 @@
+{
+  "title": "没有 pom.xml，fastjson 被改名后拷进 WEB-INF/lib",
+  "has_package": [
+    "com.alibaba:fastjson@1.2.24"
+  ],
+  "reachable": [
+    "CVE-2017-18349"
+  ],
+  "min_level": {
+    "CVE-2017-18349": "yellow"
+  }
+}

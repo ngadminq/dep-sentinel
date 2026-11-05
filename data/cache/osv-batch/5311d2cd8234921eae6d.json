@@ -1,0 +1,31 @@
+{
+ "request": {
+  "queries": [
+   {
+    "package": {
+     "name": "PyYAML",
+     "ecosystem": "PyPI"
+    },
+    "version": "5.3.1"
+   }
+  ]
+ },
+ "elapsed_ms": 665,
+ "recorded_at": "2026-11-03T19:52:43+0800",
+ "response": {
+  "results": [
+   {
+    "vulns": [
+     {
+      "id": "GHSA-8q59-q68h-6hv4",
+      "modified": "2026-02-04T03:33:10.792778Z"
+     },
+     {
+      "id": "PYSEC-2021-142",
+      "modified": "2023-11-08T04:02:26.414885Z"
+     }
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：Maven/com.alibaba:fastjson 1.2.24\n漏洞：CVE-2025-70974\n摘要：FASTJSON Includes Functionality from Untrusted Control Sphere "
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 3294,
+ "recorded_at": "2026-11-02T17:04:42+0800",
+ "response": {
+  "id": "chatcmpl-aaddc7f3afa2cc12",
+  "object": "chat.completion",
+  "created": 1793611358,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2025-70974 fastjson PoC 函数\", \"CVE-2025-70974 fastjson PoC exploit function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要确保每条不超过30个字/词。中文按字？英文按词？最好简短。包含CVE编号或包名。漏洞 CVE-2025-70974，包 fastjson 1.2.24。查询应针对利用/PoC/触发函数。中文一条，英文一条。\n\n可能中文：\"CVE-2025-70974 fastjson 利用 PoC 触发函数\" 字数？中文字符：CVE-2025-70974 算? 用户说各不超过30个字/词。中文查询可以包含英文CVE。粗略：CVE-2025-70974(14?) fastjson(8?) 利用(2) PoC(3) 触发函数(4) 总约31? 需要安全。可缩短：\"CVE-2025-70974 fastjson PoC 触发函数\" 约 14+8+3+4=29? 如果按字符可能35。中文“字”通常中文字符，英文单词算词？不确定。更短：\"CVE-2025-70974 fastjson PoC 函数\" 14+8+3+2=27。包含CVE和包名。\n\n英文：\"CVE-2025-70974 fastjson PoC exploit function\" 词数：CVE-2025-70974(1) fastjson(2) PoC(3) exploit(4) function(5) 不超过30词。也可 \"fastjson 1.2.24 CVE-2025-70974 PoC function\" 5 words. 需要包含CVE或包名，最好都包含。\n\n只输出JSON。确保合法JSON。中文查询：\"CVE-2025-70974 fastjson PoC 函数\" 英文：\"CVE-2025-70974 fastjson PoC exploit function\"\n\n检查是否满足“一条中文、一条英文”。中文查询包含中文“函数”，英文全英文。各不超过30字/词。OK。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 170,
+   "total_tokens": 767,
+   "completion_tokens": 597,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

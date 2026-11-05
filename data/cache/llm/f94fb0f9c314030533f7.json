@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/event-stream 3.3.6\n漏洞：GHSA-mh6f-8j2x-4483\n摘要：Critical severity vulnerability that affects event-stream and flatmap-stream"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 3684,
+ "recorded_at": "2026-11-02T14:50:56+0800",
+ "response": {
+  "id": "chatcmpl-a787ffe685b9fae3",
+  "object": "chat.completion",
+  "created": 1793603332,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"event-stream 漏洞 利用 PoC 函数\", \"event-stream GHSA-mh6f-8j2x-4483 exploit PoC function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要分析：包 npm/event-stream 3.3.6，漏洞 GHSA-mh6f-8j2x-4483。摘要 Critical severity vulnerability that affects event-stream and flatmap-stream。需要查询词包含 CVE 编号或包名。这里没有给 CVE，但有 GHSA。要求包含 CVE 编号或包名，所以可用包名 event-stream。中文一条，英文一条，各不超过30个字/词。要判断是否已被利用、有无公开 PoC、触发需要调用哪个函数。查询词应适合搜索引擎。\n\n中文查询词：例如 \"event-stream 3.3.6 GHSA-mh6f-8j2x-4483 利用 PoC 函数\" 字数？中文字符和英文算？不超过30个字/词。可以短：\"event-stream GHSA-mh6f-8j2x-4483 利用 PoC 函数\" 大概 event-stream(12?) GHSA... 19? 中文4? 总可能超？需要谨慎。用户说各不超过30个字/词，可能中文按字，英文按词。我们可以让中文查询词很短：\"event-stream 漏洞 利用 PoC 函数\" 包含包名，中文4词？ event-stream 1词，漏洞1，利用1，PoC1，函数1，共5词，OK。但需要针对 GHSA? 可以包含包名即可。为了更精确：\"event-stream 3.3.6 漏洞 利用 PoC 函数\" 词数：event-stream, 3.3.6, 漏洞, 利用, PoC, 函数 =6词，OK。中文字数：漏洞2 利用2 函数2 =6，英文/数字 token 3，总9? OK。\n\n英文查询词：需要包含包名或 CVE。可用 \"event-stream GHSA-mh6f-8j2x-4483 exploit PoC function\" 词数：event-stream(1) GHSA...(1) exploit(1) PoC(1) function(1)=5 words. 字符可能 45? 但要求30个字/词，英文按词，5词 OK。若按字符可能超？中文说“字/词”，英文通常词。可以。\n\n但“触发需要调用哪个函数” 查询词可包含 \"function\" 或 \"call\"。英文：\"event-stream GHSA-mh6f-8j2x-4483 exploit PoC function\" 很好。中文：\"event-stream 3.3.6 漏洞 利用 PoC 函数\" 或 \"event-stream GHSA-mh6f-8j2x-4483 利用 PoC 函数\"。包含包名。中文若包含 GHSA 可能字符多但词数少。为了安全，中文：\"event-stream 漏洞 利用 PoC 函数\" 5词。英文：\"event-stream GHSA-mh6f-8j2x-4483 exploit PoC function\" 5词。\n\n只输出 JSON。确保合法 JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 170,
+   "total_tokens": 958,
+   "completion_tokens": 788,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

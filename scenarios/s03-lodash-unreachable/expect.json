@@ -1,0 +1,5 @@
+{
+  "title": "lodash 版本有洞但漏洞函数没被调用",
+  "red": [],
+  "allow_red_only": []
+}

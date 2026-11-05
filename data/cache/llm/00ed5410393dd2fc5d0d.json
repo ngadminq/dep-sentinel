@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-101904\n摘要：Axios: Header Injection via Inherited headers After Minimal Interceptor"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 5292,
+ "recorded_at": "2026-11-02T15:01:16+0800",
+ "response": {
+  "id": "chatcmpl-82d47921dc3deb3f",
+  "object": "chat.completion",
+  "created": 1793603951,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\":[\"CVE-2026-101904 axios 利用 PoC\",\"CVE-2026-101904 axios PoC exploit function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n需要构造查询。包 npm/axios 1.7.4，漏洞 CVE-2026-101904，摘要 Axios: Header Injection via Inherited headers After Minimal Interceptor。\n\n要求：一条中文、一条英文，各不超过30个字/词。包含 CVE 编号或包名。目标：判断是否已被利用、有无公开 PoC、触发需要调用哪个函数。\n\n中文查询可包含 CVE-2026-101904 和 axios，利用/PoC/函数。字数限制：中文字符？“各不超过30个字/词”可能中文按字，英文按词。需要安全。中文：CVE-2026-101904 axios 利用 PoC 函数？ 计算：CVE-2026-101904 可能算一个词？但保守按字符？中文不超过30个字符。 \"CVE-2026-101904 axios 利用 PoC 函数\" 字符：CVE(3)+-1+2026(4)+-1+101904(6)=15? 加空格1 axios5 空格1 利用2 空格1 PoC3 空格1 函数2 =? 15+1+5+1+2+1+3+1+2=31? 可能超。可以缩短：\"CVE-2026-101904 axios PoC 函数\" 字符：15+1+5+1+3+1+2=28。包含CVE和包名，PoC，函数。是否表达利用？可加“利用”但可能超。 \"CVE-2026-101904 axios 利用函数\" 字符：15+1+5+1+2+1+2=27。包含利用、函数，但没PoC。用户要判断是否已被利用、有无公开PoC、触发需要调用哪个函数。查询词可以综合。中文：\"CVE-2026-101904 axios 利用 PoC\" 字符：15+1+5+1+2+1+3=28。没有函数。 \"CVE-2026-101904 axios PoC 函数\" 28，没有利用。 \"CVE-2026-101904 axios 利用 PoC 函数\" 31可能超。若按词：CVE-2026-101904(1) axios(1) 利用(1) PoC(1) 函数(1)=5词，不超过30词。但“字/词”可能中文按字，英文按词。为保险，中文不超过30个字符。可以 \"CVE-2026-101904 axios 利用 PoC\" 28字符。英文查询词不超过30 words，很容易。英文：\"CVE-2026-101904 axios PoC exploit function\" 6 words. 包含CVE和包名，PoC, exploit, function. 或 \"CVE-2026-101904 axios exploited PoC function\" 6 words. 需要触发需要调用哪个函数，用 \"function\" 或 \"call\". 英文：\"CVE-2026-101904 axios PoC exploit function\" 好。\n\n只输出JSON。确保合法JSON。中文查询里包含CVE编号或包名，有。英文也有。\n\n考虑 CVE-2026-101904 是未来/虚构？不管。\n\n最终：{\"queries\":[\"CVE-2026-101904 axios 利用 PoC\",\"CVE-2026-101904 axios PoC exploit function\"]}\n\n检查中文长度：字符串 \"CVE-2026-101904 axios 利用 PoC\" 字符数：C1 V2 E3 -4 2 5 0 6 6 -7 1 8 0 9 1 10 9 11 0 12 4 13? 等等：CVE-2026-101904 长度：CVE=3, hyphen=1, 2026=4, hyphen=1, 101904=6 total15. space1=16, axios=5 ->21, space=22, 利用=2 ->24, space=25, PoC=3 ->28. OK.\n\n英文 words: CVE-2026-101904(1) axios(2) PoC(3) exploit(4) function(5). OK.\n\n只输出JSON，无解释。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 169,
+   "total_tokens": 1359,
+   "completion_tokens": 1190,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

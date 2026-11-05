@@ -1,0 +1,8 @@
+{
+  "title": "axios 一个版本 30+ 条告警的噪音",
+  "red": [],
+  "allow_red_only": [],
+  "not_reachable": [
+    "CVE-2025-27152"
+  ]
+}

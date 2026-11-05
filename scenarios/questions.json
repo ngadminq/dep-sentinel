@@ -1,0 +1,32 @@
+[
+  {
+    "id": "q1",
+    "text": "群里转来一篇预警：Apache Log4j2 远程代码执行漏洞（Log4Shell），攻击者往日志里塞 ${jndi:ldap://...} 就能执行代码。我们有没有事？",
+    "affected": [
+      "login-service"
+    ]
+  },
+  {
+    "id": "q2",
+    "text": "CVE-2025-27152 axios 绝对 URL 导致 SSRF 和凭证泄露，我们中了吗？",
+    "affected": [
+      "link-preview",
+      "order-service"
+    ]
+  },
+  {
+    "id": "q3",
+    "text": "fastjson 反序列化漏洞又爆了，我们哪个服务用了？",
+    "affected": [
+      "legacy-order"
+    ],
+    "note": "加入 s13 后，fastjson 只存在于改名拷进来的 jar 里"
+  },
+  {
+    "id": "q4",
+    "text": "老板转了篇文章说 PyYAML 解析 YAML 能任意代码执行，影响我们吗？",
+    "affected": [
+      "config-center"
+    ]
+  }
+]

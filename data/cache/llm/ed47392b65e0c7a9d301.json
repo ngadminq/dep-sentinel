@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-42042\n摘要：Axios: XSRF Token Cross-Origin Leakage via Prototype Pollution Gadget in `withXSRFToken` Boolean Coercion"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 4850,
+ "recorded_at": "2026-11-02T15:07:56+0800",
+ "response": {
+  "id": "chatcmpl-bb89d79a294b5bc1",
+  "object": "chat.completion",
+  "created": 1793604350,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\":[\"axios CVE-2026-42042 利用 PoC\",\"CVE-2026-42042 axios withXSRFToken PoC exploit function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：设计2条搜索引擎查询词，一条中文一条英文，各不超过30个字/词，包含CVE编号或包名。只输出JSON。需要判断漏洞是否已被利用、有无公开PoC、触发需要调用哪个函数。包 npm/axios 1.7.4，CVE-2026-42042，摘要 Axios XSRF Token Cross-Origin Leakage via Prototype Pollution Gadget in withXSRFToken Boolean Coercion。\n\n需要生成查询词。中文不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含 CVE 编号或包名。最好包含 CVE-2026-42042 和 axios/withXSRFToken/PoC/exploit。\n\n中文查询：CVE-2026-42042 axios withXSRFToken 利用 PoC 函数？字数：CVE-2026-42042 算? 中文字数可能包括英文字符？通常按字符？要安全短。中文：“CVE-2026-42042 axios withXSRFToken 利用 PoC” 长度：CVE(3)+-+2026(4)+-+42042(5)=15? 加空格? 总字符可能 38? 用户说30个字/词，中文可能按词？需要更短。可以中文：“axios CVE-2026-42042 PoC withXSRFToken” 但这是英文混合。中文查询词可以包含英文。要一条中文，一条英文。中文可写：“axios CVE-2026-42042 利用 PoC” 字数：axios 5 + space + CVE-2026-42042 15? 如果按字符超30。若按词：axios(1) CVE-2026-42042(1) 利用(1) PoC(1)=4词，OK。但“字/词”模糊。为保险，中文短：“axios CVE-2026-42042 PoC” 词数4，字符21? axios5+1+15+1+3=25，OK。包含包名和CVE。但需要触发函数？查询词可包含 withXSRFToken，但字符可能超。中文：“axios CVE-2026-42042 withXSRFToken” 字符5+1+15+1+13=35，超30字符。若按词4词，OK。用户说30个字/词，中文按字，英文按词。中文查询如果包含英文长串，可能按字算超。最好中文查询用中文词和CVE，不含长函数？但需要触发函数，可英文查询包含函数。中文查询可：“axios CVE-2026-42042 利用 PoC” 字符：axios 5, space1, CVE-2026-42042 15, space1, 利用2, space1, PoC3 =28? 5+1+15+1+2+1+3=28，OK。包含包名和CVE，查询利用/PoC。\n\n英文查询不超过30词。可：“CVE-2026-42042 axios withXSRFToken PoC exploit function” 词数：CVE-2026-42042(1) axios(2) withXSRFToken(3) PoC(4) exploit(5) function(6) 很安全。包含CVE和包名和函数。也可加 “boolean coercion” 但没必要。需要判断是否已被利用、有无公开PoC、触发调用哪个函数。查询词应利于搜索：CVE-2026-42042 axios withXSRFToken PoC exploit function。\n\n只输出JSON。确保合法JSON。中文查询里中文引号？ JSON字符串。{\"queries\":[\"axios CVE-2026-42042 利用 PoC\",\"CVE-2026-42042 axios withXSRFToken PoC exploit function\"]}\n\n检查中文查询是否“中文”：包含中文“利用”，可。英文查询英文。各不超过30字/词：中文按字符28，按词4；英文6词。OK。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 182,
+   "total_tokens": 1229,
+   "completion_tokens": 1047,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

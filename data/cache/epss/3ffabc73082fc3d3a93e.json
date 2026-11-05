@@ -1,0 +1,33 @@
+{
+ "request": {
+  "cves": [
+   "CVE-2020-7598",
+   "CVE-2021-44906"
+  ]
+ },
+ "elapsed_ms": 513,
+ "recorded_at": "2026-11-05T15:29:21+0800",
+ "response": {
+  "status": "OK",
+  "status-code": 200,
+  "version": "1.0",
+  "access": "public",
+  "total": 2,
+  "offset": 0,
+  "limit": 100,
+  "data": [
+   {
+    "cve": "CVE-2021-44906",
+    "epss": "0.045810000",
+    "percentile": "0.916600000",
+    "date": "2026-11-04"
+   },
+   {
+    "cve": "CVE-2020-7598",
+    "epss": "0.019310000",
+    "percentile": "0.800770000",
+    "date": "2026-11-04"
+   }
+  ]
+ }
+}

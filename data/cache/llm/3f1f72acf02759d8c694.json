@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/jquery 3.4.1\n漏洞：CVE-2020-11022\n摘要：Potential XSS vulnerability in jQuery"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 3266,
+ "recorded_at": "2026-11-02T14:46:44+0800",
+ "response": {
+  "id": "chatcmpl-80255d84fd120d85",
+  "object": "chat.completion",
+  "created": 1793603080,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2020-11022 jQuery XSS PoC 函数\", \"CVE-2020-11022 jQuery XSS PoC function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：设计2条搜索引擎查询词，一条中文一条英文，各不超过30个字/词，包含CVE编号或包名。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n任务：包 npm/jquery 3.4.1，漏洞 CVE-2020-11022，摘要 Potential XSS vulnerability in jQuery。需要判断是否已被利用、有无公开PoC、触发需要调用哪个函数。查询词应针对安全情报检索，包含CVE或包名。中文不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。需要包含 CVE 编号或包名。最好中文包含 CVE-2020-11022 和 jQuery，英文包含 CVE-2020-11022 jQuery PoC exploit function。\n\n需要只输出JSON，无其他。确保合法JSON。\n\n中文查询词：例如 \"CVE-2020-11022 jQuery XSS 利用 PoC 函数\" 字数？中文字符：CVE-2020-11022 算？通常英文数字可能按字符？要求不超过30个字/词。可以短：\"CVE-2020-11022 jQuery XSS PoC 函数\" 大概 25? 包含CVE和包名。中文查询词可以：\"CVE-2020-11022 jQuery XSS 利用 PoC 函数\" 可能 28? 安全。\n\n英文查询词：\"CVE-2020-11022 jQuery XSS PoC exploit function\" 词数：CVE-2020-11022(1) jQuery(2) XSS(3) PoC(4) exploit(5) function(6) 小于30。包含CVE。\n\n但用户要求“一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名。” 中文必须中文？可以包含英文CVE。英文必须英文。输出JSON数组两个字符串。\n\n考虑触发需要调用哪个函数：查询词可加 \"trigger function\" 或 \"调用函数\"。中文：\"CVE-2020-11022 jQuery XSS PoC 调用函数\" 字数：CVE-2020-11022 (14? if chars) jQuery(6) XSS(3) PoC(3) 调用函数(4) 总可能30? 如果按中文字，英文单词可能算词？不确定。更短：\"CVE-2020-11022 jQuery PoC 函数\" 包含CVE和包名，短。但需要判断是否被利用、公开PoC、触发函数。查询词可：\"CVE-2020-11022 jQuery XSS PoC 函数\" 足够。\n\n英文：\"CVE-2020-11022 jQuery XSS PoC function\" 5 words.\n\n最终只JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 159,
+   "total_tokens": 870,
+   "completion_tokens": 711,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

@@ -1,0 +1,6 @@
+{
+  "title": "只在开发依赖里",
+  "red": [],
+  "allow_red_only": [],
+  "all_level": "white"
+}

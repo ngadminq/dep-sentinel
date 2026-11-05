@@ -1,0 +1,8 @@
+{
+  "name": "login-service",
+  "owner": {
+    "name": "张三",
+    "mobile": "13800000001"
+  },
+  "exposure": "internet"
+}

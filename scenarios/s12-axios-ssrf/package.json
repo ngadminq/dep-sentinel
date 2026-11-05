@@ -1,0 +1,8 @@
+{
+  "name": "link-preview",
+  "version": "1.0.0",
+  "dependencies": {
+    "axios": "1.7.4",
+    "express": "4.21.2"
+  }
+}

@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-42043\n摘要：Axios: Incomplete Fix for CVE-2025-62718 — NO_PROXY Protection Bypassed via RFC 1122 Loopback Subnet (127.0.0.0/8) in Axios 1.15.0"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 7565,
+ "recorded_at": "2026-11-02T15:05:08+0800",
+ "response": {
+  "id": "chatcmpl-967d6eb532196069",
+  "object": "chat.completion",
+  "created": 1793604180,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"axios CVE-2026-42043 PoC 利用函数\", \"axios CVE-2026-42043 NO_PROXY PoC exploit function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要生成两条查询词。包 npm/axios 1.7.4，漏洞 CVE-2026-42043，摘要提到 Axios incomplete fix for CVE-2025-62718, NO_PROXY bypass via RFC 1122 loopback subnet 127.0.0.0/8 in Axios 1.15.0。用户要求包含 CVE 编号或包名。最好包含 CVE-2026-42043 和 axios。中文不超过30个字，英文不超过30个词？“各不超过 30 个字/词”可能中文30字，英文30词。需要简短。\n\n目标：判断是否已被利用、有无公开 PoC、触发需要调用哪个函数。查询词应搜索利用/PoC/函数。中文可：“CVE-2026-42043 axios NO_PROXY 绕过 PoC 利用 函数” 字数？中文字符加英文？大概：CVE-2026-42043(15?) axios(5) NO_PROXY(8) 绕过(2) PoC(3) 利用(2) 函数(2) 总字符可能超30？要求30个字/词，中文按字，英文按词？为安全，短一些。中文：“CVE-2026-42043 axios NO_PROXY PoC 利用” 词数：CVE-2026-42043, axios, NO_PROXY, PoC, 利用 = 5词，字符可能28? 可以。\n英文：“CVE-2026-42043 axios NO_PROXY bypass PoC exploit function” 词数：CVE-2026-42043(1) axios(2) NO_PROXY(3) bypass(4) PoC(5) exploit(6) function(7) 小于30。包含CVE和包名。\n\n但“触发需要调用哪个函数”可能查询应包含 function 或 API。英文可：“CVE-2026-42043 axios NO_PROXY bypass PoC function” 7词。中文：“CVE-2026-42043 axios NO_PROXY 绕过 PoC 函数” 词数：CVE..., axios, NO_PROXY, 绕过, PoC, 函数 = 6词。字符：CVE-2026-42043 15? axios 5, NO_PROXY 8, 绕过2, PoC3, 函数2, spaces 5 = 40? 如果按字符可能超30。用户说“各不超过 30 个字/词”，中文可能按字，英文按词。中文查询如果包含长CVE编号，字符数可能超30。需要控制中文字数？通常“字”包括汉字，英文单词可能算词？不确定。为了安全，中文尽量短，但必须包含CVE编号或包名。可以只包含包名 axios，不含CVE？要求包含 CVE 编号或包名，可以包含 axios。中文：“axios NO_PROXY 绕过 PoC 利用 函数” 词数：axios, NO_PROXY, 绕过, PoC, 利用, 函数 = 6词；字符：axios5 + space1 + NO_PROXY8 + space1 + 绕过2 + space1 + PoC3 + space1 + 利用2 + space1 + 函数2 = 27? 5+1+8+1+2+1+3+1+2+1+2=27。不错。但漏洞特定 CVE 可能更好。若包含CVE编号字符长。中文：“axios CVE-2026-42043 PoC 利用” 字符：axios5+1+CVE-2026-42043 15? C V E - 2 0 2 6 - 4 2 0 4 3 = 15? +1+PoC3+1+利用2 = 28? 5+1+15+1+3+1+2=28。可以。但缺少 NO_PROXY/函数。目标包括触发函数，可加“函数”会超？“axios CVE-2026-42043 PoC 函数” 5+1+15+1+3+1+2=28。包含包名和CVE，PoC，函数。是否判断是否被利用？PoC可。中文：“axios CVE-2026-42043 利用 PoC 函数” 5+1+15+1+2+1+3+1+2=31? 5+1=6, +15=21, +1=22, +2=24, +1=25, +3=28, +1=29, +2=31。超。去掉利用：“axios CVE-2026-42043 PoC 函数” 28。可以。\n\n英文：“axios CVE-2026-42043 NO_PROXY PoC function” 词数 6? axios(1) CVE-2026-42043(2) NO_PROXY(3) PoC(4) function(5) 小于30。包含包名和CVE。也可加 exploit? “axios CVE-2026-42043 NO_PROXY bypass PoC function” 7词。好。\n\n只输出JSON。确保合法JSON。中文查询：“axios CVE-2026-42043 PoC 函数” 是否足够？可能搜索中文利用情报，但“函数”可能不够。可以“axios CVE-2026-42043 PoC 利用函数” 字符：axios5+1+15+1+3+1+4? 利用函数4 = 31? 5+1+15+1+3+1+4=30? 计算：axios(5) space(1)=6, CVE-2026-42043(15)=21, space=22, PoC(3)=25, space=26, 利用函数(4)=30。正好30字符（如果CVE编号15）。可以。中文：“axios CVE-2026-42043 PoC 利用函数” 30。包含包名、CVE、PoC、利用函数。很好。\n\n英文：“axios CVE-2026-42043 NO_PROXY PoC exploit function” 词数：axios 1, CVE 2, NO_PROXY 3, PoC 4, exploit 5, function 6. 小于30。包含包名和CVE。也可“axios CVE-2026-42043 NO_PROXY bypass PoC function” 6词。为了触发函数，function。为了利用，exploit。用 exploit function。\n\n最终 JSON: {\"queries\": [\"axios CVE-2026-42043 PoC 利用函数\", \"axios CVE-2026-42043 NO_PROXY PoC exploit function\"]}\n\n检查中文不超过30个字/词：如果按词：axios, CVE-2026-42043, PoC, 利用函数 = 4词。如果按字符：30。OK。英文按词6。OK。只输出JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 214,
+   "total_tokens": 1993,
+   "completion_tokens": 1779,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

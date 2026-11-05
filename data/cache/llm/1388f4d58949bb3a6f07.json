@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-44496\n摘要：Axios: Regular Expression Denial of Service (ReDoS) via Cookie Name Injection"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 3871,
+ "recorded_at": "2026-11-02T15:00:20+0800",
+ "response": {
+  "id": "chatcmpl-bcd639765cb51975",
+  "object": "chat.completion",
+  "created": 1793603895,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"axios CVE-2026-44496 ReDoS 利用 PoC 调用函数\", \"axios CVE-2026-44496 ReDoS exploit PoC function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要确保中文查询不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含 CVE 编号或包名。最好包含 CVE-2026-44496 和 axios。目标：是否已被利用、公开 PoC、触发调用哪个函数。\n\n中文查询：例如 \"CVE-2026-44496 axios ReDoS 利用 PoC 函数\" 字数？中文字符：CVE-2026-44496 算？通常按字符？需要不超过30个字。可以短：\"CVE-2026-44496 axios ReDoS PoC 利用 函数\" 大概：CVE-2026-44496 (15? 如果按字符) + axios(5) + ReDoS(5) + PoC(3) + 利用(2) + 函数(2) 总字符约32? 但“字/词”可能宽松。为了安全，中文查询用中文词少：\"axios CVE-2026-44496 PoC 利用 函数\" 字符：axios5 + space + CVE-2026-44496 15 + space + PoC3 + space + 利用2 + space + 函数2 = 30? 5+1+15+1+3+1+2+1+2=31? 如果算空格。可去掉空格？搜索引擎查询词可以有空格。也许按词：axios(1) CVE-2026-44496(1) PoC(1) 利用(1) 函数(1) =5词，没问题。中文“字”可能指中文字数，英文单词不算？不确定。\n\n英文查询： \"axios CVE-2026-44496 ReDoS exploit PoC function\" 词数：axios1 CVE-2026-44496 2 ReDoS3 exploit4 PoC5 function6，远小于30。包含包名和CVE。\n\n需要只输出JSON，无其他。确保合法JSON。中文查询可：\"axios CVE-2026-44496 ReDoS 利用 PoC 函数\" 词数少。或者更明确：\"axios CVE-2026-44496 ReDoS 利用 PoC 调用函数\" 词数：axios, CVE..., ReDoS, 利用, PoC, 调用, 函数 =7词。中文字数：利用2 调用2 函数2 =6，英文不算？应该安全。\n\n最终：{\"queries\": [\"axios CVE-2026-44496 ReDoS 利用 PoC 调用函数\", \"axios CVE-2026-44496 ReDoS exploit PoC function\"]}\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 173,
+   "total_tokens": 949,
+   "completion_tokens": 776,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

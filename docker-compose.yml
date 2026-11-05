@@ -1,0 +1,28 @@
+services:
+  # 一次性：跑验证场景集（docker compose run --rm eval）
+  eval:
+    build: .
+    image: dep-sentinel:0.1
+    env_file:
+      - path: .env
+        required: false
+    command: ["eval"]
+    volumes:
+      - sentinel-data:/data
+      - ./out:/out
+
+  # 常驻：每天巡检挂载的仓库并推送钉钉（docker compose up -d watch）
+  watch:
+    image: dep-sentinel:0.1
+    env_file:
+      - path: .env
+        required: false
+    command: ["watch"]
+    restart: unless-stopped
+    volumes:
+      - sentinel-data:/data
+      - ./out:/out
+      - ${REPOS_DIR:-./scenarios}:/repos:ro
+
+volumes:
+  sentinel-data:

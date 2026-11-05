@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-67313\n摘要：Axios: Excessive recursion in formDataToJSON can cause denial of service"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 6178,
+ "recorded_at": "2026-11-02T14:53:41+0800",
+ "response": {
+  "id": "chatcmpl-8d9601fc9041b6b8",
+  "object": "chat.completion",
+  "created": 1793603494,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"axios CVE-2026-67313 PoC 利用\", \"axios formDataToJSON PoC\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要确保中文查询不超过30个字，英文不超过30个词？用户说各不超过30个字/词。包含 CVE 编号或包名。漏洞 CVE-2026-67313，包 npm/axios 1.7.4，摘要 formDataToJSON excessive recursion DoS。\n\n需要设计查询词，用于搜索是否被利用、PoC、触发函数。中文可包含 CVE-2026-67313 axios formDataToJSON PoC 利用。字数：CVE-2026-67313 (可能算1个词? 中文字数? 安全起见短)。中文查询：\"CVE-2026-67313 axios formDataToJSON PoC 利用\" 包含中文和英文，总字符可能：CVE-2026-67313 15? axios 5, formDataToJSON 14, PoC 3, 利用2，加空格。若按中文字数可能超过30？需要不超过30个字/词。可以简化：\"CVE-2026-67313 axios formDataToJSON PoC\" 英文词数：CVE-2026-67313(1), axios(2), formDataToJSON(3), PoC(4) 共4词，字符可能37，但“字/词”可能中文按字，英文按词。中文查询可以纯中文？必须包含CVE编号或包名。可以用“axios CVE-2026-67313 PoC 利用” 词数：axios(1), CVE-2026-67313(2), PoC(3), 利用(4) 4词，字符约25。中文“字”如果算字符，axios 5 + space + CVE...15 + space + PoC3 + space + 利用2 = 27? 可以。\n\n英文查询：\"axios CVE-2026-67313 formDataToJSON PoC exploit\" 词数：axios 1, CVE-2026-67313 2, formDataToJSON 3, PoC 4, exploit 5，字符约44，但词数5。用户说英文不超过30个字/词，可能按词。可以。\n\n需要只输出JSON。确保合法JSON。中文查询可：\"axios CVE-2026-67313 PoC 利用\" 英文：\"axios CVE-2026-67313 formDataToJSON PoC exploit\"\n\n是否要体现触发函数？英文包含 formDataToJSON。中文也可以包含函数？ \"axios CVE-2026-67313 formDataToJSON PoC\" 词数4，字符约37。若按字符可能超30？ 用户“各不超过 30 个字/词” 中文按字，英文按词。中文查询如果包含英文长函数名，可能按字符算会超。为了安全，中文查询短：\"axios CVE-2026-67313 PoC 利用\" 字符：axios(5)+1+CVE-2026-67313(15)+1+PoC(3)+1+利用(2)=28。OK。英文查询词数5，字符可能44，但按词不超过30。若按字符也需不超过30？ 英文“各不超过30个字/词”可能英文按词，但也可按字符？ 为了安全，英文也尽量短字符<=30？ 包含CVE编号15，axios5，PoC3，exploit7，总30加空格36。难。可以 \"CVE-2026-67313 axios PoC\" 字符 15+1+5+1+3=25，词数3。但缺少函数。用户要求判断触发需要调用哪个函数，查询词应有助于找函数，但只两条，英文可包含函数？ \"CVE-2026-67313 formDataToJSON PoC\" 字符 15+1+14+1+3=34，词数3。若按字符超30。 \"axios formDataToJSON PoC\" 字符 5+1+14+1+3=24，词数3，包含包名和函数，但无CVE。要求包含CVE编号或包名，满足包名。英文查询可 \"axios formDataToJSON PoC exploit\" 字符 5+1+14+1+3+1+7=32，词数4。若按字符超2。 \"axios formDataToJSON PoC\" 24字符，词3，足够。中文查询包含CVE和包名：\"axios CVE-2026-67313 PoC 利用\" 28字符。这样两条：中文查利用/PoC，英文查函数/PoC。是否英文需要CVE？ 包含包名即可。\n\n但用户说“包含 CVE 编号或包名”，每条都要包含？ 是。中文包含CVE和包名。英文包含包名。OK。\n\n只输出JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 170,
+   "total_tokens": 1421,
+   "completion_tokens": 1251,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

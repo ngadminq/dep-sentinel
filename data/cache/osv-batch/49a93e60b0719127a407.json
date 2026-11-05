@@ -1,0 +1,31 @@
+{
+ "request": {
+  "queries": [
+   {
+    "package": {
+     "name": "jquery",
+     "ecosystem": "npm"
+    },
+    "version": "3.4.1"
+   }
+  ]
+ },
+ "elapsed_ms": 660,
+ "recorded_at": "2026-11-02T14:23:22+0800",
+ "response": {
+  "results": [
+   {
+    "vulns": [
+     {
+      "id": "GHSA-gxr4-xjj5-5px2",
+      "modified": "2026-09-10T03:48:45.850954Z"
+     },
+     {
+      "id": "GHSA-jpcq-cgw6-v4j6",
+      "modified": "2026-09-10T03:48:45.809517Z"
+     }
+    ]
+   }
+  ]
+ }
+}

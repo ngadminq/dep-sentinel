@@ -1,0 +1,6 @@
+{
+  "title": "jQuery XSS：KEV 收录 + URL 参数进 .html()",
+  "red": [
+    "CVE-2020-11023"
+  ]
+}

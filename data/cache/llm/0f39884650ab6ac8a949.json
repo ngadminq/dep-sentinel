@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-42044\n摘要：Axios: Invisible JSON Response Tampering via Prototype Pollution Gadget in `parseReviver`"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 10106,
+ "recorded_at": "2026-11-02T14:53:15+0800",
+ "response": {
+  "id": "chatcmpl-b22c20c188486c75",
+  "object": "chat.completion",
+  "created": 1793603464,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"axios CVE-2026-42044 PoC 利用\", \"CVE-2026-42044 parseReviver\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要构造中文和英文查询。包 npm/axios 1.7.4，漏洞 CVE-2026-42044，摘要 Axios: Invisible JSON Response Tampering via Prototype Pollution Gadget in parseReviver。\n\n目标：判断是否已被利用、有无公开 PoC、触发需要调用哪个函数。查询词应包含 CVE 编号或包名。中文不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。需要只输出JSON。\n\n中文查询可包含 CVE-2026-42044 axios 利用 PoC parseReviver 函数。需要简洁。比如：\"CVE-2026-42044 axios 利用 PoC parseReviver 函数\" 字数？中文字符：CVE-2026-42044 算? 通常查询词长度可能按字符？用户说字/词，中文不超过30个字。我们可以用中文短语：\"axios CVE-2026-42044 利用 PoC parseReviver 函数\" 长度大概：axios(5) 空格 CVE-2026-42044(14?) 利用2 空格 PoC3 空格 parseReviver12 函数2，总字符约40，可能超过30字？如果按中文字数，英文单词算词？不确定。最好短一些。\n\n中文：\"axios CVE-2026-42044 PoC parseReviver\" 包含包名和CVE，PoC，函数。长度：axios 5 + space + CVE-2026-42044 14 + space + PoC 3 + space + parseReviver 12 = 36 chars. If Chinese “字” maybe English words count as words? It says 30 个字/词, likely each query no more than 30 characters/words. To be safe, make shorter.\n\nCould use only CVE and function: \"CVE-2026-42044 parseReviver PoC\" length 14+1+12+1+3=31 chars. Slight over if char. \"CVE-2026-42044 parseReviver\" length 27. But need PoC? Could include \"PoC\" maybe \"CVE-2026-42044 PoC parseReviver\" 31. Maybe \"CVE-2026-42044 parseReviver PoC\" 31. Need under 30. Could use \"CVE-2026-42044 parseReviver\" only, but user wants PoC? Query can be for exploit/PoC/function. Maybe \"CVE-2026-42044 parseReviver exploit\" length 14+1+12+1+8=36.\n\nMaybe Chinese query: \"axios CVE-2026-42044 parseReviver\" length 5+1+14+1+12=33. Too long if char. Could use \"axios CVE-2026-42044\" length 20. But need function? Maybe not necessary? The task: design queries to judge if exploited, PoC, trigger function. It doesn't require each query include all, but should help. Could one query Chinese: \"axios CVE-2026-42044 利用\" length 5+1+14+1+2=23. Good. English: \"CVE-2026-42044 parseReviver PoC\" 31 maybe too long. \"CVE-2026-42044 parseReviver\" 27. But no PoC. Could \"axios CVE-2026-42044 PoC\" length 5+1+14+1+3=24. Good. But no function. Maybe combine: \"axios CVE-2026-42044 parseReviver\" 33. If limit 30 words not chars, it's 4 words, okay. The phrase “各不超过 30 个字/词” likely means Chinese query <=30 Chinese characters, English <=30 words. So 33 chars but 4 words is fine. But to be safe, keep under 30 characters? It says 字/词, for English words. Could be okay.\n\nNeed only JSON. Choose:\nChinese: \"axios CVE-2026-42044 利用 PoC\" (words? chars 5+1+14+1+2+1+3=27) includes package, CVE, exploit, PoC.\nEnglish: \"CVE-2026-42044 parseReviver PoC\" (words 3, chars 31). If char limit, maybe 31. Could use \"CVE-2026-42044 parseReviver\" (27) but no PoC. Maybe \"axios CVE-2026-42044 parseReviver\" (4 words, 33 chars). Need PoC? Could use \"CVE-2026-42044 PoC parseReviver\" 31. Maybe \"CVE-2026-42044 PoC parseReviver\" is 3 words, 31 chars. If limit 30 words, fine. If 30 chars, fail by 1. Could shorten CVE? No. Could use \"axios CVE-2026-42044 PoC\" 24 chars, 4 words. But function missing. Maybe English query can be \"axios CVE-2026-42044 parseReviver\" 33 chars, 4 words. If char limit, fail. But likely word limit.\n\nMaybe use package name instead of CVE? \"axios parseReviver PoC exploit\" length 5+1+12+1+3+1+8=31 chars, 4 words. \"axios parseReviver PoC\" 22 chars, 3 words. But no CVE. Requirement include CVE编号或包名, so package ok. Need trigger function: parseReviver. PoC: PoC. Exploit? \"axios parseReviver PoC exploit\" 31 chars. Could be okay if words. But to be safe char <=30: \"axios parseReviver PoC\" 22. It includes package and function and PoC. But not exploit. Could search PoC enough.\n\nChinese: \"axios parseReviver PoC 利用\" length 5+1+12+1+3+1+2=25. Good. English: \"axios parseReviver PoC exploit\" 31. Maybe \"axios parseReviver PoC\" 22. But user wants whether exploited, PoC, function. PoC query enough. Could include exploit in Chinese. English maybe \"axios parseReviver PoC\" is fine.\n\nBut requirement: 包含 CVE 编号或包名. Both include axios. Good.\n\nNeed output JSON only. Ensure valid JSON.\n\nPotential final:\n{\"queries\": [\"axios parseReviver PoC 利用\", \"axios parseReviver PoC\"]}\n\nBut English query lacks exploit? It has PoC. Could be okay. Maybe better English: \"axios parseReviver PoC exploit\" if word limit 30 words. It's 4 words. If char limit 30, 31. Could use \"axios parseReviver exploit PoC\" same 31. \"axios parseReviver PoC exploit\" 31. Could remove space? No. \"axios parseReviver PoC\" 22.\n\nMaybe include CVE in one: \"CVE-2026-42044 parseReviver\" 27. Chinese: \"axios CVE-2026-42044 利用\" 23. This covers CVE, package, exploit, function in English. But no PoC. Could Chinese include PoC: \"axios CVE-2026-42044 PoC 利用\" 27. English: \"CVE-2026-42044 parseReviver\" 27. This is good: Chinese has package, CVE, PoC, exploit; English has CVE, function. Both under 30 chars. Does English need PoC? It can find PoC via CVE and function. But maybe not explicit. Could English: \"CVE-2026-42044 parseReviver PoC\" 31. If char limit, no. Could use \"CVE-2026-42044 parseReviver\" and rely. The task says design queries to judge if exploited, PoC, trigger function. It doesn't require each query to contain all keywords. So okay.\n\nNeed maybe \"axios\" in English? Requirement include CVE or package. It includes CVE. Good.\n\nFinal JSON:\n{\"queries\": [\"axios CVE-2026-42044 PoC 利用\", \"CVE-2026-42044 parseReviver\"]}\n\nCheck Chinese length: axios(5) space(1) CVE-2026-42044(14) space(1) PoC(3) space(1) 利用(2) = 27. Good. English length: CVE-2026-42044(14) space(1) parseReviver(12)=27. Good.\n\nOnly JSON.\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 174,
+   "total_tokens": 2423,
+   "completion_tokens": 2249,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

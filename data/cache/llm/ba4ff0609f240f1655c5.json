@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：PyPI/Jinja2 2.10\n漏洞：CVE-2024-56326\n摘要：Jinja has a sandbox breakout through indirect reference to format method"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 2910,
+ "recorded_at": "2026-11-02T17:04:21+0800",
+ "response": {
+  "id": "chatcmpl-b67eb9024b7bf7bc",
+  "object": "chat.completion",
+  "created": 1793611338,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2024-56326 Jinja2 沙箱逃逸 PoC 利用 触发函数\", \"CVE-2024-56326 Jinja2 sandbox breakout PoC exploited format method\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n需要构造中文和英文查询。必须包含 CVE-2024-56326 或包名 Jinja2/PyPI。中文不超过30个字，英文不超过30个词。目标：判断是否已被利用、有无公开PoC、触发需要调用哪个函数。查询词应适合搜索引擎。\n\n中文示例：\"CVE-2024-56326 Jinja2 沙箱逃逸 PoC 利用 触发函数\" 字数？中文字符：CVE-2024-56326 算? 用户说字/词，中文不超过30个字。可以。包含CVE和包名。英文：\"CVE-2024-56326 Jinja2 sandbox breakout PoC exploited format method\" 词数：CVE-2024-56326(1) Jinja2(2) sandbox(3) breakout(4) PoC(5) exploited(6) format(7) method(8). 少于30。\n\n需要只输出JSON。确保合法JSON。中文查询可以：\"CVE-2024-56326 Jinja2 沙箱逃逸 PoC 利用 触发函数\"。英文：\"CVE-2024-56326 Jinja2 sandbox breakout PoC exploited format method\"。\n\n检查是否包含包名或CVE：都包含。是否针对“是否已被利用、有无公开PoC、触发需要调用哪个函数”：中文有PoC 利用 触发函数；英文有PoC exploited format method。可以。\n\n只输出JSON，不要解释。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 168,
+   "total_tokens": 647,
+   "completion_tokens": 479,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

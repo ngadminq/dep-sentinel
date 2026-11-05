@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/lodash 4.17.11\n漏洞：CVE-2026-2950\n摘要：lodash vulnerable to Prototype Pollution via array path bypass in `_.unset` and `_.omit`"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 8844,
+ "recorded_at": "2026-11-03T20:13:42+0800",
+ "response": {
+  "id": "chatcmpl-b534b3aa7fdee748",
+  "object": "chat.completion",
+  "created": 1793709096,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"lodash _.unset _.omit 原型污染 PoC\", \"CVE-2026-2950 lodash _.unset _.omit prototype pollution PoC exploited\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要构造查询。包 npm/lodash 4.17.11，漏洞 CVE-2026-2950，摘要：lodash vulnerable to Prototype Pollution via array path bypass in `_.unset` and `_.omit`。\n\n需要中文查询不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含 CVE 编号或包名。目标：判断是否已被利用、有无公开 PoC、触发需要调用哪个函数。查询词应适合搜索引擎。\n\n中文可包含 CVE-2026-2950 lodash 原型污染 unset omit PoC 利用。字数：CVE-2950? 需要准确。中文查询：“CVE-2026-2950 lodash unset omit 原型污染 PoC 利用” 字数？中文字符：lodash 英文算？通常搜索引擎查询词长度可宽松，但要求不超过30个字/词。中文里英文单词可能算词？为安全，简短。\n中文：“CVE-2026-2950 lodash unset omit 原型污染 PoC” 包含 CVE 和包名。字数：CVE-2026-2950 (1 token? 13 chars), lodash, unset, omit, 原型污染(4), PoC。总词数约6，字符可能<30。可以。\n英文：“CVE-2026-2950 lodash unset omit prototype pollution PoC exploited” 词数：CVE-2026-2950(1), lodash(2), unset(3), omit(4), prototype(5), pollution(6), PoC(7), exploited(8). 小于30。也可加 function? “CVE-2026-2950 lodash unset omit prototype pollution PoC function” 9 words. 但目标触发函数，查询可包含 _.unset _.omit? 英文查询词可包含 “_.unset _.omit” 但词数? “CVE-2026-2950 lodash _.unset _.omit prototype pollution PoC” 7? 好。\n\n需要只输出 JSON。确保合法 JSON。中文查询不要引号内换行。\n\n考虑 CVE-2026-2950 是未来/虚构？不管。查询包含 CVE 编号或包名。两条各包含。中文：“CVE-2026-2950 lodash _.unset _.omit 原型污染 PoC” 英文：“CVE-2026-2950 lodash _.unset _.omit prototype pollution PoC”\n\n是否“触发需要调用哪个函数”：查询包含 _.unset _.omit 即可。是否已被利用：中文加“利用”或英文加“exploited”。中文：“CVE-2026-2950 lodash _.unset _.omit 原型污染 PoC 利用” 词数：CVE..., lodash, _.unset, _.omit, 原型污染, PoC, 利用 = 7。英文：“CVE-2026-2950 lodash _.unset _.omit prototype pollution PoC exploited” 8。\n\n需要各不超过30个字/词。中文如果按字符：CVE-2026-2950 13, space, lodash 6, space, _.unset 7, space, _.omit 6, space, 原型污染 4, space, PoC 3, space, 利用 2 = 47 chars? 但“字/词”可能中文按字，英文按词。若严格中文字数包含英文字符？可能超过30。用户说“各不超过 30 个字/词”，中文一条不超过30个字，英文不超过30个词。中文里英文包名/CVE可能算字？通常中文查询词长度按字符可能。为了安全，缩短中文。\n\n中文：“CVE-2026-2950 lodash unset omit 原型污染 PoC” 字符：CVE-2026-2950 13 + space 1 + lodash 6 + space 1 + unset 5 + space 1 + omit 4 + space 1 + 原型污染 4 + space 1 + PoC 3 = 40 chars. 如果按中文字数，英文单词算词，总词数 6。应该可以。若按字符，可能超30。需要更短？包含 CVE 编号或包名，可以只包含包名 lodash，不一定要 CVE。中文：“lodash unset omit 原型污染 PoC 利用” 字符：lodash6+1+unset5+1+omit4+1+原型污染4+1+PoC3+1+利用2=29 chars。包含包名 lodash。很好。但漏洞 CVE 编号没有，要求包含 CVE 编号或包名，满足包名。中文不超过30字符。英文：“lodash unset omit prototype pollution PoC exploited” 词数 8，字符可能 48，但英文按词不超过30。包含包名。也可以加 CVE? 英文词数仍少，但字符长。要求英文不超过30个词，不是字符。可以包含 CVE。英文：“CVE-2026-2950 lodash unset omit prototype pollution PoC exploited” 词数 8。包含 CVE 和包名。\n\n中文如果包含 CVE 会字符超30，但可能按词不超。为了保险，中文用包名，英文用 CVE+包名。用户说包含 CVE 编号或包名，每条都要包含？“包含 CVE 编号或包名”可能每条查询词都要包含其中之一。中文包含 lodash，英文包含 CVE 和 lodash。好。\n\n中文：“lodash unset omit 原型污染 PoC 利用” 是否触发函数？包含 unset omit，但摘要中是 _.unset 和 _.omit。搜索中下划线可能影响？可以用 “lodash _.unset _.omit 原型污染 PoC” 字符：lodash6+1+_.unset7+1+_.omit6+1+原型污染4+1+PoC3=30? 6+1=7, +7=14, +1=15, +6=21, +1=22, +4=26, +1=27, +3=30. 正好30字符（如果下划线和点算字符）。没有“利用”但 PoC 可判断公开 PoC。是否已被利用？可加“利用”会超。中文：“lodash _.unset _.omit 原型污染 PoC” 30 chars。包含包名和函数。很好。\n\n英文：“CVE-2026-2950 lodash _.unset _.omit prototype pollution PoC” 词数：CVE-2026-2950(1) lodash(2) _.unset(3) _.omit(4) prototype(5) pollution(6) PoC(7). 小于30。包含 CVE 和包名。是否已被利用？没有 exploited。可加 exploited 词数8。英文：“CVE-2026-2950 lodash _.unset _.omit prototype pollution PoC exploited” 8 words. 好。\n\n只输出 JSON。确保双引号。中文查询里有下划线点，没问题。\n\n最终：\n{\"queries\": [\"lodash _.unset _.omit 原型污染 PoC\", \"CVE-2026-2950 lodash _.unset _.omit prototype pollution PoC exploited\"]}\n\n检查中文长度：如果按字符：lodash(6) space1=7, _.unset(7)=14, space=15, _.omit(6)=21, space=22, 原型污染(4)=26, space=27, PoC(3)=30. 正好。若中文“字”只算汉字，则4字，英文单词算词，总词数6。满足。英文词数8。满足。\n\n是否“触发需要调用哪个函数”：查询包含 _.unset _.omit。好。\n\n只输出 JSON，无解释。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 175,
+   "total_tokens": 2055,
+   "completion_tokens": 1880,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

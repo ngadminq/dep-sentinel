@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：Maven/org.apache.logging.log4j:log4j-core 2.14.1\n漏洞：CVE-2025-68161\n摘要：Apache Log4j does not verify the TLS hostname in its Socket Appender"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 3253,
+ "recorded_at": "2026-11-02T14:46:19+0800",
+ "response": {
+  "id": "chatcmpl-a4c979b238d3872f",
+  "object": "chat.completion",
+  "created": 1793603056,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\n  \"queries\": [\n    \"CVE-2025-68161 log4j-core Socket Appender TLS 主机名验证 PoC 利用\",\n    \"CVE-2025-68161 log4j-core Socket Appender TLS hostname verification PoC exploit function\"\n  ]\n}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：设计2条搜索引擎查询词，一条中文一条英文，各不超过30个字/词，包含CVE编号或包名。只输出JSON。\n\n任务：包 Maven/org.apache.logging.log4j:log4j-core 2.14.1，漏洞 CVE-2025-68161，摘要：Apache Log4j does not verify the TLS hostname in its Socket Appender。需要判断是否已被利用、有无公开PoC、触发需要调用哪个函数。查询词应围绕这些。中文一条，英文一条，各不超过30个字/词。包含CVE编号或包名。\n\n需要输出 JSON: {\"queries\": [\"...\", \"...\"]}\n\n中文查询词：要短，不超过30个中文字？“各不超过 30 个字/词” 中文按字，英文按词。包含 CVE 编号或包名。可以：CVE-2025-68161 Log4j Socket Appender TLS 主机名验证 PoC 利用。字数：CVE-2025-68161 可能算？中文字数：Log4j? 英文单词？最好简短。中文查询：CVE-2025-68161 Log4j Socket Appender TLS 主机名验证 PoC 利用。包含 CVE。字符数可能：CVE-2025-68161 (14?) 但要求30个字/词，应该没问题。更自然：CVE-2025-68161 Log4j Socket Appender TLS 主机名验证 PoC 利用。\n\n英文查询词：不超过30 words。包含 CVE or package. 例如：CVE-2025-68161 Log4j Socket Appender TLS hostname verification PoC exploit function。Words: CVE-2025-68161(1) Log4j(2) Socket(3) Appender(4) TLS(5) hostname(6) verification(7) PoC(8) exploit(9) function(10). Good.\n\nNeed ensure only JSON. Could include quotes. No extra.\n\nPotential issue: CVE-2025-68161 maybe fictional? But just query.\n\nNeed maybe include package name log4j-core? Could use log4j-core. English: CVE-2025-68161 log4j-core Socket Appender TLS hostname verification PoC exploit function. Words 11. Chinese: CVE-2025-68161 log4j-core Socket Appender TLS 主机名验证 PoC 利用. Count Chinese chars? 主机名验证 5, 利用2, plus English tokens. Under 30.\n\nNeed final JSON only.\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 181,
+   "total_tokens": 862,
+   "completion_tokens": 681,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

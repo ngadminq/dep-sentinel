@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-44486\n摘要：Axios: Proxy-Authorization header leaks to redirect target when proxy is re-evaluated to direct connection"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 1573,
+ "recorded_at": "2026-11-02T15:00:44+0800",
+ "response": {
+  "id": "chatcmpl-960e1e8527bfce18",
+  "object": "chat.completion",
+  "created": 1793603922,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2026-44486 axios 代理认证头泄露 PoC 利用\", \"CVE-2026-44486 axios Proxy-Authorization redirect PoC exploit\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：设计2条搜索引擎查询词，一条中文一条英文，各不超过30个字/词，包含CVE编号或包名。只输出JSON。需要确保查询词简洁。包 npm/axios 1.7.4，漏洞 CVE-2026-44486，摘要 Proxy-Authorization header leaks to redirect target when proxy re-evaluated to direct connection。需要判断是否已被利用、有无公开PoC、触发需要调用哪个函数。查询词应包含CVE或包名。中文不超过30个字，英文不超过30个词？用户说各不超过30个字/词，可能中文30字，英文30词。最好短。中文可：\"CVE-2026-44486 axios Proxy-Authorization 泄露 PoC 利用\" 字数？中文字符加英文？大概不超过30。英文：\"CVE-2026-44486 axios Proxy-Authorization redirect PoC exploit\" 词数 7? 可以。需要只输出JSON。确保包含CVE编号或包名。两条都包含CVE和axios更好。中文：\"CVE-2026-44486 axios 代理认证头泄露 PoC 利用\" 可能20多。英文：\"CVE-2026-44486 axios Proxy-Authorization redirect PoC exploit\" 7 words. 输出JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 177,
+   "total_tokens": 538,
+   "completion_tokens": 361,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

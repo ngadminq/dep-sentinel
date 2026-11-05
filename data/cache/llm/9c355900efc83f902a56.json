@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：PyPI/Jinja2 2.10\n漏洞：CVE-2020-28493\n摘要：Regular Expression Denial of Service (ReDoS) in Jinja2"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 4775,
+ "recorded_at": "2026-11-02T17:03:15+0800",
+ "response": {
+  "id": "chatcmpl-94c3942d7a3eabdf",
+  "object": "chat.completion",
+  "created": 1793611271,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2020-28493 利用 PoC 函数\", \"CVE-2020-28493 Jinja2 ReDoS PoC function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：设计2条搜索引擎查询词，一条中文一条英文，各不超过30个字/词，包含CVE编号或包名。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n任务：安全情报检索员。判断依赖漏洞是否已被利用、有无公开PoC、触发需要调用哪个函数。包 PyPI/Jinja2 2.10，漏洞 CVE-2020-28493，摘要 ReDoS in Jinja2。\n\n需要生成两条查询词。中文不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含 CVE 编号或包名。最好包含 CVE-2020-28493 和 Jinja2。\n\n中文查询：例如 \"CVE-2020-28493 Jinja2 ReDoS 利用 PoC 函数\" 字数？中文字符：CVE-2020-28493 算？通常查询词长度按字符？要求不超过30个字/词。中文可包含英文。我们保守短一些。\n中文：\"CVE-2020-28493 Jinja2 ReDoS PoC 利用函数\" 长度：CVE-2020-28493 (15? C V E - 2 0 2 0 - 2 8 4 9 3 =15) + space 1 + Jinja2 6 + space 1 + ReDoS 5 + space 1 + PoC 3 + space 1 + 利用函数 4 =37? 如果按字符可能超。需要不超过30个字/词。中文“字”可能中文字，英文单词算词？但安全起见总长度短。\n中文：\"CVE-2020-28493 Jinja2 ReDoS PoC\" 长度字符：15+1+6+1+5+1+3=32。可能超30。若按词：CVE-2020-28493(1), Jinja2(1), ReDoS(1), PoC(1) 4词，OK。但“字/词”模糊。最好中文查询包含中文且短：\"Jinja2 CVE-2020-28493 ReDoS PoC\" 字符 6+1+15+1+5+1+3=32。还是32。\n可以只用 CVE 编号和中文：\"CVE-2020-28493 利用 PoC 函数\" 字符 15+1+2+1+3+1+2=25。包含 CVE 编号，满足。但需要包名？要求包含 CVE 编号或包名，CVE足够。中文查询：\"CVE-2020-28493 利用 PoC 函数\" 25字符。很好。\n英文查询：\"CVE-2020-28493 Jinja2 ReDoS PoC function\" 词数：CVE-2020-28493(1), Jinja2(1), ReDoS(1), PoC(1), function(1) =5词，字符 15+1+6+1+5+1+3+1+8=42，但按词不超过30词，OK。若按字符可能超，但英文按词。用户说“字/词”，英文按词。可以。\n但为了更精准触发函数，可加 \"which function\" 但词数仍少。英文：\"CVE-2020-28493 Jinja2 ReDoS PoC function\" 5词。\n中文：\"CVE-2020-28493 利用 PoC 函数\" 5词? 中文词：CVE-2020-28493, 利用, PoC, 函数 =4。字符25。\n只输出JSON。确保合法JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 171,
+   "total_tokens": 1124,
+   "completion_tokens": 953,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

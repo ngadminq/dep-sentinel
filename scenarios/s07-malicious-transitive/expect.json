@@ -1,0 +1,6 @@
+{
+  "title": "间接依赖里混入投毒包",
+  "red_package": [
+    "flatmap-stream"
+  ]
+}

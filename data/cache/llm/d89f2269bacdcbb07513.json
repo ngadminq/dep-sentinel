@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/lodash 4.17.20\n漏洞：CVE-2025-13465\n摘要：Lodash has Prototype Pollution Vulnerability in `_.unset` and `_.omit` functions"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 5133,
+ "recorded_at": "2026-11-02T14:48:57+0800",
+ "response": {
+  "id": "chatcmpl-8dd2b1845777ac68",
+  "object": "chat.completion",
+  "created": 1793603212,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"lodash CVE-2025-13465 利用 PoC\", \"lodash CVE-2025-13465 unset omit PoC\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要确保中文查询不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含 CVE 编号或包名。最好包含 CVE-2025-13465 和 lodash，以及利用/PoC/函数。中文一条，英文一条。\n\n中文候选：\"CVE-2025-13465 lodash unset omit 原型污染 PoC 利用\" 字数？中文字符：CVE-2025-13465 算？通常查询词长度可能按字符？要求不超过30个字/词。中文短语：CVE-2025-13465 lodash unset omit 原型污染 PoC 利用。字符数可能超过30？让我们数：CVE-2025-13465 (14? C V E - 2 0 2 5 - 1 3 4 6 5 =14) 空格1 lodash 6 空格1 unset 5 空格1 omit 4 空格1 原型污染 4 空格1 PoC 3 空格1 利用 2。总字符约43。若按“字/词”可能中文词数：CVE-2025-13465(1) lodash(1) unset(1) omit(1) 原型污染(1) PoC(1) 利用(1) =7词，可以。但为安全，简短：\"CVE-2025-13465 lodash 原型污染 PoC\" 词数4，字符约27? CVE-2025-13465 14 + space 1 + lodash 6 + space1 + 原型污染4 + space1 + PoC3 =30 exactly? 14+1+6+1+4+1+3=30. Good. 但需要触发函数？摘要提到 _.unset and _.omit。查询词可以包含 unset omit。中文：\"CVE-2025-13465 lodash unset omit PoC\" 字符：14+1+6+1+5+1+4+1+3=36. 词数5。若按词不超过30，没问题。若按字符可能超。用户说中文不超过30个字/词，可能中文按字，英文按词。中文查询里英文单词怎么算？通常搜索引擎查询词长度限制可能按字符？需要保守。\n\n可以中文：\"CVE-2025-13465 lodash 利用 PoC\" 字符：14+1+6+1+2+1+3=28。包含CVE和包名，利用/PoC。但没函数。用户要求设计查询词用于判断是否已被利用、有无公开PoC、触发需要调用哪个函数。查询词不必全部包含，但最好包含函数名。中文可：\"CVE-2025-13465 lodash unset omit\" 字符：14+1+6+1+5+1+4=32，略超。若去掉CVE? 必须包含CVE编号或包名，可以只包名：\"lodash CVE-2025-13465 unset omit\" 字符：6+1+14+1+5+1+4=32。超。\n\n中文：\"lodash CVE-2025-13465 PoC\" 字符：6+1+14+1+3=25。包含包名和CVE，PoC。没有函数。可以接受？为了触发函数，英文查询可包含 unset omit。\n\n英文：\"lodash CVE-2025-13465 unset omit PoC\" 词数：lodash(1) CVE-2025-13465(1) unset(1) omit(1) PoC(1) =5 words, under 30. Good. 中文：\"lodash CVE-2025-13465 利用 PoC\" 词数? lodash 1 CVE 1 利用 1 PoC 1 =4. 字符 6+1+14+1+2+1+3=28. Good. 包含包名和CVE，利用/PoC。\n\n只输出JSON。确保合法JSON。中文查询可包含中文。最终：{\"queries\": [\"lodash CVE-2025-13465 利用 PoC\", \"lodash CVE-2025-13465 unset omit PoC\"]}\n\n检查英文不超过30词：5。中文不超过30字/词：如果按字符28，按词4。OK。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 175,
+   "total_tokens": 1330,
+   "completion_tokens": 1155,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

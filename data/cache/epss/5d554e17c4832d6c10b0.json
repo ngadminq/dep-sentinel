@@ -1,0 +1,40 @@
+{
+ "request": {
+  "cves": [
+   "CVE-2025-27152",
+   "CVE-2025-58754",
+   "CVE-2026-25639"
+  ]
+ },
+ "elapsed_ms": 712,
+ "recorded_at": "2026-11-05T15:23:20+0800",
+ "response": {
+  "status": "OK",
+  "status-code": 200,
+  "version": "1.0",
+  "access": "public",
+  "total": 3,
+  "offset": 0,
+  "limit": 100,
+  "data": [
+   {
+    "cve": "CVE-2026-25639",
+    "epss": "0.027990000",
+    "percentile": "0.864990000",
+    "date": "2026-11-04"
+   },
+   {
+    "cve": "CVE-2025-58754",
+    "epss": "0.011960000",
+    "percentile": "0.681740000",
+    "date": "2026-11-04"
+   },
+   {
+    "cve": "CVE-2025-27152",
+    "epss": "0.007920000",
+    "percentile": "0.564350000",
+    "date": "2026-11-04"
+   }
+  ]
+ }
+}

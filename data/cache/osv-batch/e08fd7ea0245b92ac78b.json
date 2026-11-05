@@ -1,0 +1,50 @@
+{
+ "request": {
+  "queries": [
+   {
+    "package": {
+     "name": "event-stream",
+     "ecosystem": "npm"
+    },
+    "version": "3.3.6"
+   },
+   {
+    "package": {
+     "name": "flatmap-stream",
+     "ecosystem": "npm"
+    },
+    "version": "0.1.1"
+   }
+  ]
+ },
+ "elapsed_ms": 725,
+ "recorded_at": "2026-11-02T14:23:39+0800",
+ "response": {
+  "results": [
+   {
+    "vulns": [
+     {
+      "id": "GHSA-mh6f-8j2x-4483",
+      "modified": "2021-09-15T20:08:26Z"
+     }
+    ]
+   },
+   {
+    "vulns": [
+     {
+      "id": "GHSA-9x64-5r7x-2q53",
+      "modified": "2021-10-01T13:30:04Z"
+     },
+     {
+      "id": "GHSA-mh6f-8j2x-4483",
+      "modified": "2021-09-15T20:08:26Z"
+     },
+     {
+      "id": "MAL-2025-20690",
+      "modified": "2025-08-14T18:52:04Z"
+     }
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2025-62718\n摘要：Axios has a NO_PROXY Hostname Normalization Bypass that Leads to SSRF"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 3896,
+ "recorded_at": "2026-11-02T14:52:33+0800",
+ "response": {
+  "id": "chatcmpl-9258d0a9811b1a8c",
+  "object": "chat.completion",
+  "created": 1793603429,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\n  \"queries\": [\n    \"CVE-2025-62718 axios SSRF PoC 利用 函数\",\n    \"CVE-2025-62718 axios NO_PROXY SSRF PoC exploit function\"\n  ]\n}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n需要构造查询词。漏洞：npm/axios 1.7.4，CVE-2025-62718，摘要 Axios has a NO_PROXY Hostname Normalization Bypass that Leads to SSRF。\n\n要求：一条中文、一条英文，各不超过30个字/词。包含CVE编号或包名。目标：判断是否已被利用、有无公开PoC、触发需要调用哪个函数。查询词应适合搜索引擎。中文可包含 CVE-2025-62718 axios NO_PROXY SSRF PoC 利用 函数？字数不超过30个中文字/词？需要谨慎。英文不超过30 words? “各不超过 30 个字/词”可能中文30字，英文30词。包含CVE编号或包名。\n\n中文查询：CVE-2025-62718 axios NO_PROXY SSRF PoC 利用 函数\n计算中文字符？CVE-2025-62718 算英文/数字？通常搜索引擎查询词长度可能按字符？用户说字/词，中文不超过30个字，英文不超过30词。我们可以简短。\n中文：\"CVE-2025-62718 axios NO_PROXY SSRF PoC 利用 函数\" 包含CVE和包名。长度：CVE-2025-62718 (14 chars?) axios 5, NO_PROXY 8, SSRF 4, PoC 3, 利用2, 函数2，总字符约38? 如果按中文字数可能英文单词算词？不确定。为了安全，更短：\"CVE-2025-62718 axios SSRF PoC 利用 函数\" 字符：CVE-2025-62718 14, axios 5, SSRF 4, PoC 3, 利用2, 函数2 =30? 14+5+4+3+2+2=30 plus spaces? 可能超过。若按词数：CVE-2025-62718(1), axios(1), SSRF(1), PoC(1), 利用(1), 函数(1)=6词。可以。\n但需要包含包名或CVE，有CVE和axios。\n\n英文查询：\"CVE-2025-62718 axios NO_PROXY SSRF PoC exploited function\" 词数：CVE-2025-62718(1) axios(2) NO_PROXY(3) SSRF(4) PoC(5) exploited(6) function(7). 小于30词。包含CVE和包名。也可 \"axios CVE-2025-62718 NO_PROXY SSRF PoC exploit function\" 7 words.\n\n需要只输出JSON。确保合法JSON。中文查询可以：\"CVE-2025-62718 axios SSRF PoC 利用 函数\"。英文：\"CVE-2025-62718 axios NO_PROXY SSRF PoC exploit function\"。\n\n是否要体现“是否已被利用”：exploited / in the wild? 查询词可包含 \"exploited\" 或 \"PoC\"。中文“利用”可表示 exploited。英文 \"exploited\"。触发需要调用哪个函数：function。\n\n最终 JSON only.\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 172,
+   "total_tokens": 1052,
+   "completion_tokens": 880,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

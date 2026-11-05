@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-42041\n摘要：Axios: Authentication Bypass via Prototype Pollution Gadget in `validateStatus` Merge Strategy"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 4799,
+ "recorded_at": "2026-11-02T15:06:52+0800",
+ "response": {
+  "id": "chatcmpl-980d0645645d9455",
+  "object": "chat.completion",
+  "created": 1793604287,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2026-42041 axios 利用 PoC 函数\", \"CVE-2026-42041 axios validateStatus prototype pollution PoC exploit function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：设计2条搜索引擎查询词，一条中文一条英文，各不超过30个字/词，包含CVE编号或包名。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n任务：包 npm/axios 1.7.4，漏洞 CVE-2026-42041，摘要 Axios: Authentication Bypass via Prototype Pollution Gadget in `validateStatus` Merge Strategy。\n\n需要生成查询词，用于判断是否已被利用、有无公开PoC、触发需要调用哪个函数。应包含CVE编号或包名。中文不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。需要只输出JSON。\n\n中文查询词可包含 CVE-2026-42041 axios validateStatus 原型污染 利用 PoC 函数。要短。比如：“CVE-2026-42041 axios validateStatus 原型污染 PoC 利用函数” 字数？中文字符：CVE? 英文算字？通常中文字数可能包括英文单词？保险短一些。中文：“CVE-2026-42041 axios validateStatus 原型污染 PoC” 包含CVE和包名。字数：CVE(3?) 2026(4) 42041(5) axios(5) validateStatus(14) 原型污染(4) PoC(3) 总字符约40，可能超过30字。需要不超过30个字/词。中文查询词可以按“字”计，英文单词可能算词？最好很短。\n\n中文：“CVE-2026-42041 axios 原型污染 PoC” 字符：CVE 3 + space? 2026 4 + 42041 5 + axios 5 + 原型污染 4 + PoC 3 = 24 plus spaces? 如果按字符可能29? 可以。包含CVE和包名。是否体现函数？不一定，但查询词可检索。也可加 validateStatus 但会超。用户要求触发需要调用哪个函数，查询词应有助于判断，可包含 validateStatus。中文：“CVE-2026-42041 axios validateStatus PoC” 字符：3+4+5+5+14+3=34 plus spaces 5? 超。若按词：CVE-2026-42041 (1), axios (2), validateStatus (3), PoC (4) 不超过30词。中文“字/词”可能中文按字，英文按词？不确定。安全起见，中文查询词总字符不超过30？ “CVE-2026-42041 axios PoC 函数” 字符：3+4+5+5+3+2=22 plus spaces 4=26。包含CVE和包名，函数。但没validateStatus。可以。\n\n英文查询词不超过30个词。可以：“CVE-2026-42041 axios validateStatus prototype pollution PoC exploit function” 词数：CVE-2026-42041(1) axios(2) validateStatus(3) prototype(4) pollution(5) PoC(6) exploit(7) function(8) 很好。包含CVE和包名。\n\n中文查询词：“CVE-2026-42041 axios PoC 函数” 是否包含包名 axios，CVE。字数：如果按中文字符+英文字母：CVE(3) 2026(4) 42041(5) axios(5) PoC(3) 函数(2) =22，加空格4=26。OK。也可以“CVE-2026-42041 axios 利用函数 PoC” 字符：3+4+5+5+4+3=24 + spaces 4=28。包含利用函数。更好：“CVE-2026-42041 axios 利用函数 PoC”。但“利用函数”可能不精确。查询词要判断是否已被利用、有无公开PoC、触发需要调用哪个函数。中文：“CVE-2026-42041 axios 利用 PoC 函数” 字符：3+4+5+5+2+3+2=24 + spaces 5? 29。可以。\n\n只输出JSON。确保合法JSON。中文双引号。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 173,
+   "total_tokens": 1232,
+   "completion_tokens": 1059,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2025-27152\n摘要：axios Requests Vulnerable To Possible SSRF and Credential Leakage via Absolute URL"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 5996,
+ "recorded_at": "2026-11-02T15:02:04+0800",
+ "response": {
+  "id": "chatcmpl-a40cf421709bd9ae",
+  "object": "chat.completion",
+  "created": 1793603998,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"axios 1.7.4 SSRF PoC 调用函数\", \"axios 1.7.4 SSRF PoC exploited call function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要确保中文查询不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含 CVE 编号或包名。最好包含 CVE-2025-27152 和 axios。目标：判断是否已被利用、有无公开 PoC、触发需要调用哪个函数。查询词应适合搜索引擎。\n\n中文：例如 \"CVE-2025-27152 axios SSRF 利用 PoC 触发函数\" 字数？中文字符：CVE-2025-27152 算？通常按字符可能15，axios 5，SSRF 4，利用2，PoC3，触发2，函数2，空格？总可能33。需要不超过30个字/词。可以缩短：\"CVE-2025-27152 axios SSRF PoC 触发函数\" 字符：CVE-2025-27152(15?) axios(5) SSRF(4) PoC(3) 触发(2) 函数(2) 加空格5 =36? 如果按词：CVE-2025-27152, axios, SSRF, PoC, 触发, 函数 =6词，OK。但“字/词”模糊。为了安全，中文查询短一些：\"CVE-2025-27152 axios SSRF PoC 函数\" 词数6，字符可能15+5+4+3+2+2+空格5=36。若按中文字数，英文单词可能算词。应该没问题。\n\n英文：需要不超过30个词。例如 \"CVE-2025-27152 axios SSRF PoC exploited function\" 词数7。包含 CVE 和包名。也可以 \"axios CVE-2025-27152 SSRF PoC exploited trigger function\" 词数8。\n\n只输出 JSON。确保合法 JSON。中文查询里包含 CVE 编号或包名，英文也包含。\n\n考虑“触发需要调用哪个函数”：查询词可包含 \"function\" 或 \"调用函数\"。中文：\"CVE-2025-27152 axios SSRF PoC 调用函数\" 词数？CVE-2025-27152 axios SSRF PoC 调用 函数 =6词。字符可能15+5+4+3+2+2+空格5=36。若按中文字数，英文单词可能算词。应该没问题。\n\n英文：\"CVE-2025-27152 axios SSRF PoC exploited call function\" 词数8。\n\n最终 JSON:\n{\"queries\": [\"CVE-2025-27152 axios SSRF PoC 调用函数\", \"CVE-2025-27152 axios SSRF PoC exploited call function\"]}\n\n检查英文词数：CVE-2025-27152(1) axios(2) SSRF(3) PoC(4) exploited(5) call(6) function(7) <=30. 中文：如果按“字”可能英文字母算字？ CVE-2025-27152 15, axios 5, SSRF 4, PoC 3, 调用2, 函数2, 空格5 =36 >30。用户说“各不超过 30 个字/词”，中文一条不超过30个字，英文一条不超过30个词。中文如果按字符，可能超。需要更短中文，避免长 CVE? 但必须包含 CVE 编号或包名。可以只包含包名 axios，不包含 CVE，减少字符。中文：\"axios SSRF PoC 调用函数\" 字符：axios5 + 空格1 + SSRF4 + 空格1 + PoC3 + 空格1 + 调用2 + 空格1 + 函数2 =20? 5+1+4+1+3+1+2+1+2=20，OK。包含包名。英文：\"axios SSRF PoC exploited call function\" 词数7，OK。这样更安全。\n\n但用户要求包含 CVE 编号或包名，包名即可。漏洞是 npm/axios 1.7.4，包名 axios。查询词可以 \"axios 1.7.4 SSRF PoC 调用函数\" 字符：axios5+1+1.7.4 5? +1+SSRF4+1+PoC3+1+调用2+1+函数2 =24? OK。包含包名和版本。英文 \"axios 1.7.4 SSRF PoC exploited call function\" 词数8。\n\n为了判断是否已被利用，英文可加 exploited。中文可加 \"利用\" 但字符增加。中文：\"axios 1.7.4 SSRF PoC 利用函数\" 字符：axios5+1+1.7.4 5? +1+SSRF4+1+PoC3+1+利用2+1+函数2 =26? OK。但“利用函数”不如“调用函数”。\"axios 1.7.4 SSRF PoC 调用函数\" 24。是否体现已被利用？查询词不一定全部体现，但可检索。英文体现 exploited。\n\n最终选择：\n中文：\"axios 1.7.4 SSRF PoC 调用函数\"\n英文：\"axios 1.7.4 SSRF PoC exploited call function\"\n\n只输出 JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 169,
+   "total_tokens": 1520,
+   "completion_tokens": 1351,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：PyPI/Jinja2 2.10\n漏洞：CVE-2025-27516\n摘要：Jinja2 vulnerable to sandbox breakout through attr filter selecting format method"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 7951,
+ "recorded_at": "2026-11-02T17:02:33+0800",
+ "response": {
+  "id": "chatcmpl-965606e9e2e7d0d6",
+  "object": "chat.completion",
+  "created": 1793611225,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"Jinja2 CVE-2025-27516 利用 PoC\", \"CVE-2025-27516 Jinja2 attr format PoC exploited\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n需要确保中文查询不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含CVE编号或包名。最好包含 CVE-2025-27516 和 Jinja2。目标：判断是否已被利用、有无公开PoC、触发需要调用哪个函数。查询词应适合搜索引擎。\n\n中文：例如 \"CVE-2025-27516 Jinja2 沙箱逃逸 attr filter format 利用 PoC\" 字数？中文字符：CVE-2025-27516 算? 通常英文/数字串可能按字符? 用户说字/词，中文不超过30个字。我们可简短：\"CVE-2025-27516 Jinja2 沙箱逃逸 attr format PoC\" 中文：沙箱逃逸(4) attr? 英文单词? 可能总长度? 安全点：中文查询：\"CVE-2025-27516 Jinja2 沙箱逃逸 attr format PoC\" 包含 CVE 和包名。中文字数：沙箱逃逸4，PoC? 英文。总字符可能28? 计算：CVE-2025-27516 (15? C V E - 2 0 2 5 - 2 7 5 1 6 =15), space1, Jinja2 6, space1, 沙箱逃逸4, space1, attr4, space1, format6, space1, PoC3 =43字符，但“字/词”可能中文按词? 不确定。要求不超过30个字/词，可能中文查询总词数? 为了安全，中文查询尽量短：\"CVE-2025-27516 Jinja2 利用 PoC\" 中文字：利用2 PoC? 总词少。但需要触发函数? 查询词可包含 attr format? 但长度。用户要求设计2条查询词，一条中文一条英文，各不超过30个字/词。英文按词：CVE-2025-27516 Jinja2 sandbox attr format PoC exploited? 词数：CVE-2025-27516(1) Jinja2(2) sandbox(3) attr(4) format(5) PoC(6) exploited(7) 很好。中文按字/词？ \"CVE-2025-27516 Jinja2 沙箱 attr format PoC\" 如果按中文字符：CVE... 15 + Jinja2 6 + 沙箱2 + attr4 + format6 + PoC3 =36 plus spaces. 可能超。若按词：CVE-2025-27516(1) Jinja2(2) 沙箱(3) attr(4) format(5) PoC(6) 不超。但“字/词”中文可能按字，英文按词。为保险，中文查询尽量短且包含CVE或包名。可以只用包名？ \"Jinja2 CVE-2025-27516 PoC 利用\" 中文字：利用2，PoC英文，CVE... 如果按字符：Jinja2 6 + CVE-2025-27516 15 + PoC3 + 利用2 =26 plus spaces 3 =29? 实际字符串 \"Jinja2 CVE-2025-27516 PoC 利用\" 长度：Jinja2(6)+space1=7, CVE-2025-27516(15)=22, space=23, PoC(3)=26, space=27, 利用(2)=29. 不超过30字符。包含包名和CVE。能判断利用/PoC。但触发函数? 查询词可加 attr? 会超。也许中文：\"Jinja2 CVE-2025-27516 attr PoC\" 长度：Jinja2 6 + space1=7 + CVE 15=22 + space=23 + attr4=27 + space=28 + PoC3=31 超。 \"Jinja2 CVE-2025-27516 利用\" 长度 6+1+15+1+2=25。好。\n\n英文：\"CVE-2025-27516 Jinja2 attr format PoC\" 词数 5? 很好。包含 CVE 和包名。也可加 exploited? \"CVE-2025-27516 Jinja2 attr format PoC exploited\" 6 words. 不超过30词。目标判断是否已被利用、有无PoC、触发函数。英文查询可包含 \"exploited\" 和 \"attr format\"。中文查询可包含 \"利用\" 和 \"PoC\"。但触发函数? 中文查询没有 attr/format。也许 \"Jinja2 CVE-2025-27516 利用\" 足够搜索到相关。用户要求“为判断...设计查询词”，不要求查询词必须包含所有关键词，但最好覆盖。\n\n只输出JSON。需要确保有效JSON。中文查询不超过30字/词。选择：\n中文：\"Jinja2 CVE-2025-27516 利用 PoC\" 长度：Jinja2 6, space 1, CVE-2025-27516 15, space 1, 利用 2, space 1, PoC 3 =29. 如果按中文字符，英文字母也算字符，29。OK。包含包名和CVE。\n英文：\"CVE-2025-27516 Jinja2 attr format PoC exploited\" 词数：CVE-2025-27516(1) Jinja2(2) attr(3) format(4) PoC(5) exploited(6). OK. 包含 CVE 和包名。\n\n是否英文查询词“各不超过30个字/词”英文按词，6词。OK。\n\n最终只输出 JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 169,
+   "total_tokens": 1691,
+   "completion_tokens": 1522,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

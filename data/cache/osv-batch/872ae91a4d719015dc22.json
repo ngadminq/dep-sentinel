@@ -1,0 +1,20 @@
+{
+ "request": {
+  "queries": [
+   {
+    "package": {
+     "name": "express",
+     "ecosystem": "npm"
+    },
+    "version": "4.21.2"
+   }
+  ]
+ },
+ "elapsed_ms": 602,
+ "recorded_at": "2026-11-02T14:23:41+0800",
+ "response": {
+  "results": [
+   {}
+  ]
+ }
+}

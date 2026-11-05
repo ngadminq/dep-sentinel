@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：Maven/org.apache.logging.log4j:log4j-core 2.14.1\n漏洞：CVE-2026-34477\n摘要：Apache Log4j Core: `verifyHostName` attribute silently ignored in TLS configuration"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 1705,
+ "recorded_at": "2026-11-02T14:42:59+0800",
+ "response": {
+  "id": "chatcmpl-a13ce7dcd99d05b9",
+  "object": "chat.completion",
+  "created": 1793602857,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2026-34477 log4j-core verifyHostName PoC 利用\", \"CVE-2026-34477 log4j-core verifyHostName PoC exploit\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：设计2条搜索引擎查询词，一条中文一条英文，各不超过30个字/词，包含CVE编号或包名。只输出JSON。\n\n需要判断依赖漏洞是否已被利用、有无公开PoC、触发需要调用哪个函数。包 Maven/org.apache.logging.log4j:log4j-core 2.14.1，漏洞 CVE-2026-34477，摘要 Apache Log4j Core: verifyHostName attribute silently ignored in TLS configuration。\n\n需要生成查询词。中文一条，英文一条，各不超过30个字/词。包含 CVE 编号或包名。最好包含 CVE-2026-34477 和 log4j-core 或 verifyHostName。\n\n中文查询词：例如 \"CVE-2026-34477 log4j-core verifyHostName 利用 PoC\" 字数？中文字符/词？要求不超过30个字/词。可以短。\n中文：\"CVE-2026-34477 log4j-core verifyHostName PoC 利用\" 包含 CVE 和包名。长度：CVE-2026-34477 可能算1词？中文3词？安全。\n英文：\"CVE-2026-34477 log4j-core verifyHostName PoC exploit\" 词数：CVE-2026-34477(1) log4j-core(2) verifyHostName(3) PoC(4) exploit(5) 小于30。\n\n只输出 JSON。确保合法 JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 182,
+   "total_tokens": 584,
+   "completion_tokens": 402,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

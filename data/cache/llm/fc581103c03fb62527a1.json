@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-67317\n摘要：Axios: Fetch adapter `ReadableStream` uploads bypass `maxBodyLength`"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 3109,
+ "recorded_at": "2026-11-02T15:01:39+0800",
+ "response": {
+  "id": "chatcmpl-85884ecd152f689f",
+  "object": "chat.completion",
+  "created": 1793603976,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2026-67317 axios 利用函数\", \"CVE-2026-67317 axios PoC maxBodyLength function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n需要构造查询。包 npm/axios 1.7.4，漏洞 CVE-2026-67317，摘要 Axios: Fetch adapter ReadableStream uploads bypass maxBodyLength。\n\n要求：一条中文、一条英文，各不超过30个字/词。包含 CVE 编号或包名。最好包含 CVE 和 axios，以及利用/PoC/函数。中文不超过30个汉字？“各不超过 30 个字/词”可能中文按字，英文按词。需要确保长度。\n\n中文查询：CVE-2026-67317 axios 利用 PoC maxBodyLength 函数？计数：CVE-2026-67317 可能算一个词？但安全起见总字符/词少。中文：CVE-2026-67317 axios 利用 PoC maxBodyLength 函数。包含 CVE 和包名。长度：中文词/字？“CVE-2026-67317” 15字符，axios 5，利用2，PoC3，maxBodyLength13，函数2，加空格。若按字可能超30？需要更短。可以：CVE-2026-67317 axios PoC 函数。计数：CVE-2026-67317(15) axios(5) PoC(3) 函数(2) 空格3 =28字符。若按词：4词。中文要求一条中文，这个有英文词但可接受？最好中文查询包含中文：CVE-2026-67317 axios 利用函数。字符：15+1+5+1+2+1+2=27。包含CVE和包名。是否表达利用？可以。\n\n英文查询：CVE-2026-67317 axios PoC maxBodyLength function? 词数：CVE-2026-67317(1) axios(2) PoC(3) maxBodyLength(4) function(5) 不超过30词。字符也短。包含CVE和包名。\n\n但用户要求“各不超过 30 个字/词”，英文按词，中文按字。中文“CVE-2026-67317 axios 利用函数”如果按字符27，按词？中文词可能：CVE-2026-67317, axios, 利用, 函数 =4词。OK。\n\n只输出JSON。确保合法JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 171,
+   "total_tokens": 853,
+   "completion_tokens": 682,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

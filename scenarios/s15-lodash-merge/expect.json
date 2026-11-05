@@ -1,0 +1,6 @@
+{
+  "title": "lodash defaultsDeep 深合并用户请求体",
+  "min_level": {"CVE-2019-10744": "yellow"},
+  "reachable": ["CVE-2019-10744"],
+  "has_package": ["lodash@4.17.11"]
+}

@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/lodash 4.17.20\n漏洞：CVE-2021-23337\n摘要：Command Injection in lodash"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 1907,
+ "recorded_at": "2026-11-02T14:47:51+0800",
+ "response": {
+  "id": "chatcmpl-bed54ac99254e0d2",
+  "object": "chat.completion",
+  "created": 1793603148,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2021-23337 lodash 命令注入 PoC 函数\", \"CVE-2021-23337 lodash command injection PoC function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要确保中文查询不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含 CVE 编号或包名。主题：npm/lodash 4.17.20, CVE-2021-23337, Command Injection in lodash。需要查询是否被利用、公开PoC、触发调用哪个函数。\n\n设计：\n中文：CVE-2021-23337 lodash 命令注入 利用 PoC 函数\n字数？中文字符：CVE-23337? 算字符？最好短。中文查询可包含英文CVE。比如 \"CVE-2021-23337 lodash 命令注入 PoC 函数\" 中文字数：命令注入4，PoC? 英文不算中文字？总字符可能不超过30。安全。\n英文：CVE-2021-23337 lodash command injection PoC function\n词数：CVE-2021-23337(1) lodash(2) command(3) injection(4) PoC(5) function(6) 不超过30。\n\n只输出JSON。确保合法JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 161,
+   "total_tokens": 553,
+   "completion_tokens": 392,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

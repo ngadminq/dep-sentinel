@@ -1,0 +1,31 @@
+{
+ "request": {
+  "queries": [
+   {
+    "package": {
+     "name": "com.alibaba:fastjson",
+     "ecosystem": "Maven"
+    },
+    "version": "1.2.24"
+   }
+  ]
+ },
+ "elapsed_ms": 703,
+ "recorded_at": "2026-11-02T17:00:16+0800",
+ "response": {
+  "results": [
+   {
+    "vulns": [
+     {
+      "id": "GHSA-jm7w-5684-pvh8",
+      "modified": "2026-10-05T18:45:05.985873Z"
+     },
+     {
+      "id": "GHSA-xjrr-xv9m-4pw5",
+      "modified": "2024-02-16T07:59:10.562257Z"
+     }
+    ]
+   }
+  ]
+ }
+}

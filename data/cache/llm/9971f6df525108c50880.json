@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-42040\n摘要：Axios: Null Byte Injection via Reverse-Encoding in AxiosURLSearchParams"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 2566,
+ "recorded_at": "2026-11-02T15:07:24+0800",
+ "response": {
+  "id": "chatcmpl-80d3bb7559f39ed5",
+  "object": "chat.completion",
+  "created": 1793604321,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2026-42040 axios PoC 触发函数\", \"CVE-2026-42040 axios PoC exploit function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n需要生成两条查询。包 npm/axios 1.7.4，漏洞 CVE-2026-42040，摘要 Axios: Null Byte Injection via Reverse-Encoding in AxiosURLSearchParams。\n\n要求：一条中文、一条英文，各不超过30个字/词。包含 CVE 编号或包名。目标：判断是否已被利用、有无公开 PoC、触发需要调用哪个函数。查询词应适合搜索引擎。\n\n中文查询可包含 CVE-2026-42040 axios 利用 PoC 函数？字数：CVE-2026-42040 (可能算1? 中文字数按字符? 不超过30个字/词，宽松)。例如：\"CVE-2026-42040 axios 利用 PoC AxiosURLSearchParams 函数\" 长度可能：CVE-2026-42040 15字符? 中文要求30个字/词，应该没问题。但“各不超过30个字/词”英文按词。中文按字。需要确保中文不超过30个汉字/字符？最好短。\n\n中文：\"CVE-2026-42040 axios 利用 PoC 函数\" 包含CVE和包名，短。是否体现触发函数？“函数”可。也可加 AxiosURLSearchParams 但可能长。中文查询：\"CVE-2026-42040 axios PoC 触发函数\" 很好。\n\n英文：\"CVE-2026-42040 axios PoC exploit function\" 词数：CVE-2026-42040(1) axios(2) PoC(3) exploit(4) function(5) <=30 words. 包含CVE和包名。也可 \"axios CVE-2026-42040 PoC exploit function\"。\n\n只输出JSON。确保合法JSON。不要额外文本。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 168,
+   "total_tokens": 707,
+   "completion_tokens": 539,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

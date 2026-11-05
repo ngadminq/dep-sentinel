@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-42037\n摘要：Axios: CRLF Injection in multipart/form-data body via unsanitized blob.type in formDataToStream"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 3432,
+ "recorded_at": "2026-11-02T14:55:04+0800",
+ "response": {
+  "id": "chatcmpl-bef2a0d45d121ace",
+  "object": "chat.completion",
+  "created": 1793603580,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"axios CVE-2026-42037 CRLF 利用 PoC formDataToStream\", \"axios CVE-2026-42037 CRLF PoC formDataToStream blob.type\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要构造中文查询和英文查询。必须包含 CVE 编号或包名。这里包 npm/axios 1.7.4，漏洞 CVE-2026-42037。摘要：Axios CRLF Injection in multipart/form-data body via unsanitized blob.type in formDataToStream。\n\n目标：判断是否已被利用、有无公开 PoC、触发需要调用哪个函数。查询词应适合搜索引擎，简洁。中文不超过30个字，英文不超过30个词。包含 CVE 编号或包名。最好包含关键词：利用、PoC、函数、axios、CVE-2026-42037、CRLF、formDataToStream、blob.type。\n\n中文查询：例如 \"CVE-2026-42037 axios CRLF 利用 PoC formDataToStream\" 字数？中文字符和英文单词？要求不超过30个字/词。中文查询可以混合。计算：CVE-2026-42037 (1? 或按字符? 通常词数? 安全起见短)。 \"axios CVE-2026-42037 CRLF 利用 PoC 函数\" 很短。需要包含包名或CVE。可以：\"axios CVE-2026-42037 CRLF 利用 PoC formDataToStream\" 可能英文词多但总长度短。中文不超过30字，应该没问题。\n\n英文查询： \"axios CVE-2026-42037 CRLF PoC formDataToStream blob.type\" 词数：axios(1) CVE-2026-42037(2) CRLF(3) PoC(4) formDataToStream(5) blob.type(6) 小于30。包含CVE和包名。也可以加 \"exploit\" 但 PoC enough. 为了触发函数，包含 formDataToStream。\n\n只输出 JSON，无其他。确保合法 JSON。中文查询里可包含引号？不需要。\n\n最终：\n{\"queries\": [\"axios CVE-2026-42037 CRLF 利用 PoC formDataToStream\", \"axios CVE-2026-42037 CRLF PoC formDataToStream blob.type\"]}\n\n检查中文查询长度：axios(5) space CVE-2026-42037(14?) 如果按字符可能 5+1+14+1+4+1+2+1+14 = 43 字符，但要求“字/词”可能中文按字，英文按词？ 各不超过30个字/词。中文查询有英文词，可能按词数：axios, CVE-2026-42037, CRLF, 利用, PoC, formDataToStream = 6词，OK。英文查询6词。安全。\n\n但“包含 CVE 编号或包名”：两条都包含 axios 和 CVE。OK。\n\n只输出 JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 176,
+   "total_tokens": 956,
+   "completion_tokens": 780,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

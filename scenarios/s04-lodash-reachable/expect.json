@@ -1,0 +1,10 @@
+{
+  "title": "lodash _.template 直接吃请求参数",
+  "red": [
+    "CVE-2021-23337"
+  ],
+  "allow_red_only": [
+    "CVE-2021-23337",
+    "CVE-2026-4800"
+  ]
+}

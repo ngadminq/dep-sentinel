@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：Maven/org.apache.logging.log4j:log4j-core 2.14.1\n漏洞：CVE-2021-44832\n摘要：Improper Input Validation and Injection in Apache Log4j2"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 4754,
+ "recorded_at": "2026-11-02T14:43:35+0800",
+ "response": {
+  "id": "chatcmpl-bfb692f505910a8a",
+  "object": "chat.completion",
+  "created": 1793602891,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2021-44832 利用 PoC 函数\", \"CVE-2021-44832 log4j-core PoC exploited function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：设计2条搜索引擎查询词，一条中文一条英文，各不超过30个字/词，包含CVE编号或包名。只输出JSON：{\"queries\": [\"...\", \"...\"]}。\n\n任务：安全情报检索，判断依赖漏洞是否已被利用、有无公开PoC、触发需要调用哪个函数。包 Maven/org.apache.logging.log4j:log4j-core 2.14.1，漏洞 CVE-2021-44832，摘要 Improper Input Validation and Injection in Apache Log4j2。\n\n需要生成查询词。中文不超过30个字，英文不超过30个词？用户说“各不超过 30 个字/词”，中文按字，英文按词。包含 CVE 编号或包名。最好包含 CVE-2021-44832 和 log4j-core 或 Apache Log4j2。\n\n中文查询：例如 \"CVE-2021-44832 log4j-core 2.14.1 利用 PoC 触发函数\" 字数？中文字符：CVE-2021-44832 算? 通常英文字符可能算字？为安全短一些。中文查询可包含中文和英文。需要不超过30个字/词。比如 \"CVE-2021-44832 log4j-core 利用 PoC 函数\" 中文词？如果按字，CVE-2021-44832 14字符，log4j-core 10，利用2，PoC3，函数2，总31? 可能超。可以只包含CVE编号： \"CVE-2021-44832 利用 PoC 触发函数\" 中文字：CVE-2021-44832 14, 空格? 利用2, PoC3, 触发2, 函数2 =23? 可以。但需要包名或CVE，有CVE。\n\n英文查询： \"CVE-2021-44832 log4j-core PoC exploited function\" 词数：CVE-2021-44832(1) log4j-core(2) PoC(3) exploited(4) function(5) 很短。\n\n但用户要求“为判断一个依赖漏洞‘是否已被利用、有无公开 PoC、触发需要调用哪个函数’，设计 2 条搜索引擎查询词”。查询词应能检索利用、PoC、触发函数。中文可：\"CVE-2021-44832 是否被利用 公开PoC 触发函数\" 字数：CVE-2021-44832 14, 是否2, 被利用3? 公开2, PoC3, 触发2, 函数2 =28? 可能可以。但搜索引擎查询词不宜太长。也可以 \"CVE-2021-44832 log4j-core 利用 PoC 函数\" 包含包名和CVE。\n\n需要只输出JSON，无其他。确保合法JSON。\n\n考虑中文“字”可能把英文单词/数字串算一个字？不确定。为保险，中文查询尽量短： \"CVE-2021-44832 利用 PoC 函数\" 如果按字符：CVE-2021-44832 14 + 空格1 + 利用2 + 空格1 + PoC3 + 空格1 + 函数2 =24。可以。但缺少“是否已被利用”和“公开PoC”？利用、PoC、函数覆盖。\n\n英文：\"CVE-2021-44832 log4j-core PoC exploited function\" 5 words. 包含包名和CVE。\n\n是否要包含版本 2.14.1？可加但可能超。不需要。\n\n最终 JSON:\n{\"queries\": [\"CVE-2021-44832 利用 PoC 函数\", \"CVE-2021-44832 log4j-core PoC exploited function\"]}\n\n检查中文不超过30字/词：如果按词：CVE-2021-44832(1) 利用(2) PoC(3) 函数(4) 4词。按字符24。OK。\n英文词数5。OK。\n只输出JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 178,
+   "total_tokens": 1205,
+   "completion_tokens": 1027,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

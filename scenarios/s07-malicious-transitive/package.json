@@ -1,0 +1,7 @@
+{
+  "name": "log-pipe",
+  "version": "1.0.0",
+  "dependencies": {
+    "event-stream": "3.3.6"
+  }
+}

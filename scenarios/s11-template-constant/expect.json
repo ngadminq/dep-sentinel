@@ -1,0 +1,8 @@
+{
+  "title": "调用了 _.template，但模板是写死的常量",
+  "red": [],
+  "allow_red_only": [],
+  "not_reachable": [
+    "CVE-2021-23337"
+  ]
+}

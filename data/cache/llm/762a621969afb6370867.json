@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2026-42034\n摘要：Axios' HTTP adapter-streamed uploads bypass maxBodyLength when maxRedirects: 0"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 1528,
+ "recorded_at": "2026-11-02T14:56:05+0800",
+ "response": {
+  "id": "chatcmpl-87d77df6b45e6e81",
+  "object": "chat.completion",
+  "created": 1793603643,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2026-42034 axios 利用 PoC maxBodyLength\", \"CVE-2026-42034 axios PoC maxBodyLength function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：设计2条搜索引擎查询词，一条中文一条英文，各不超过30个字/词，包含CVE编号或包名。只输出JSON。需要判断漏洞是否已被利用、有无公开PoC、触发需要调用哪个函数。包 npm/axios 1.7.4，漏洞 CVE-2026-42034，摘要 Axios HTTP adapter-streamed uploads bypass maxBodyLength when maxRedirects: 0。\n\n需要生成查询词。中文不超过30个字，英文不超过30个词？用户说各不超过30个字/词，包含CVE编号或包名。最好包含 CVE-2026-42034 和 axios。中文查询：CVE-2026-42034 axios 利用 PoC maxBodyLength 函数？字数：CVE-2026-42034 (可能算1? 但中文字数? 安全起见短)。中文：\"CVE-2026-42034 axios 利用 PoC maxBodyLength\" 包含包名和CVE。英文：\"CVE-2026-42034 axios PoC maxBodyLength function\" 词数 6? 可以。\n\n需要只输出JSON。确保有效JSON。中文查询不超过30字。英文不超过30词。可以。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 174,
+   "total_tokens": 517,
+   "completion_tokens": 343,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

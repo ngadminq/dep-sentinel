@@ -1,0 +1,58 @@
+{
+ "request": {
+  "model": "Qwen3.8-27B-FP8",
+  "temperature": 0.2,
+  "messages": [
+   {
+    "role": "system",
+    "content": "你是安全情报检索员。为判断一个依赖漏洞“是否已被利用、有无公开 PoC、触发需要调用哪个函数”，\n设计 2 条搜索引擎查询词（一条中文、一条英文，各不超过 30 个字/词，包含 CVE 编号或包名）。\n只输出 JSON：{\"queries\": [\"...\", \"...\"]}"
+   },
+   {
+    "role": "user",
+    "content": "包：npm/axios 1.7.4\n漏洞：CVE-2025-58754\n摘要：Axios is vulnerable to DoS attack through lack of data size check"
+   }
+  ],
+  "_sample": 0
+ },
+ "elapsed_ms": 1483,
+ "recorded_at": "2026-11-02T14:55:23+0800",
+ "response": {
+  "id": "chatcmpl-a7186b666693d712",
+  "object": "chat.completion",
+  "created": 1793603601,
+  "model": "Qwen3.8-27B-FP8",
+  "choices": [
+   {
+    "index": 0,
+    "message": {
+     "role": "assistant",
+     "content": "\n\n{\"queries\": [\"CVE-2025-58754 axios PoC 利用 函数\", \"CVE-2025-58754 axios exploit PoC function\"]}",
+     "refusal": null,
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "reasoning": "我们需要回答用户：作为安全情报检索员，为判断依赖漏洞是否已被利用、有无公开 PoC、触发需要调用哪个函数，设计2条搜索引擎查询词（一条中文、一条英文，各不超过30个字/词，包含CVE编号或包名）。只输出JSON：{\"queries\": [\"...\", \"...\"]}\n\n需要确保中文查询不超过30个字，英文不超过30个词？用户说各不超过30个字/词。包含CVE编号或包名。最好包含 CVE-2025-58754 和 axios。查询要针对利用/PoC/触发函数。中文可写：“CVE-2025-58754 axios 利用 PoC 触发函数” 字数？中文字符：CVE-2025-58754 算? 通常按字符? 不超过30字。可以短：“CVE-2025-58754 axios PoC 利用 函数” 包含。英文：“CVE-2025-58754 axios exploit PoC function” 词数 5? 好。\n\n只输出JSON，无其他。确保合法JSON。\n"
+    },
+    "logprobs": null,
+    "finish_reason": "stop",
+    "stop_reason": null,
+    "token_ids": null,
+    "routed_experts": null
+   }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.27.2rc1.dev77+gac7509e2b-tp2-f75037e5",
+  "usage": {
+   "prompt_tokens": 169,
+   "total_tokens": 472,
+   "completion_tokens": 303,
+   "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+ }
+}

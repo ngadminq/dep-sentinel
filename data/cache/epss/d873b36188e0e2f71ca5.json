@@ -1,0 +1,33 @@
+{
+ "request": {
+  "cves": [
+   "CVE-2020-14343",
+   "CVE-2020-1747"
+  ]
+ },
+ "elapsed_ms": 667,
+ "recorded_at": "2026-11-03T19:45:59+0800",
+ "response": {
+  "status": "OK",
+  "status-code": 200,
+  "version": "1.0",
+  "access": "public",
+  "total": 2,
+  "offset": 0,
+  "limit": 100,
+  "data": [
+   {
+    "cve": "CVE-2020-1747",
+    "epss": "0.054420000",
+    "percentile": "0.927280000",
+    "date": "2026-11-02"
+   },
+   {
+    "cve": "CVE-2020-14343",
+    "epss": "0.059840000",
+    "percentile": "0.933120000",
+    "date": "2026-11-02"
+   }
+  ]
+ }
+}

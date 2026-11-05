@@ -1,0 +1,13 @@
+{
+  "title": "没有 requirements.txt，只有装好的虚拟环境",
+  "has_package": [
+    "Jinja2@2.10",
+    "Flask@1.0"
+  ],
+  "reachable": [
+    "CVE-2019-10906"
+  ],
+  "undeclared": [
+    "requests"
+  ]
+}
