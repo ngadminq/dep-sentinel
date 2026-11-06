@@ -53,3 +53,19 @@ def search(query: str, freshness: str = "", cnt: str = "10", industry: str = "")
         pages.append({"title": p.get("title", ""), "url": p.get("url", ""), "site": p.get("site", ""),
                       "date": p.get("date", ""), "content": (p.get("content") or p.get("passage") or "")[:1800]})
     return {"request_id": root.get("RequestId"), "query": params, "pages": pages}
+
+
+if __name__ == "__main__":     # python -m sentinel.yuanbao "查询词": show one SearchPro call as it was recorded
+    import sys
+    from .cache import _key
+    sys.stdout.reconfigure(encoding="utf-8")
+    q = clean_query(sys.argv[1])
+    res = search(q)
+    rec = json.loads(_key("yuanbao", res["query"]).read_text(encoding="utf-8"))
+    print(f"POST {ENDPOINT}")
+    print("Authorization: Bearer ****（已打码）")
+    print(json.dumps(res["query"], ensure_ascii=False))
+    print(f"RequestId: {res['request_id']}    记录时间: {rec.get('recorded_at', '')}")
+    for i, p in enumerate(res["pages"][:4]):
+        print(f"[{i}] {p['site'] or p['url'].split('/')[2]} · {p['date'][:10]}")
+        print(f"    {p['title'][:60]}")

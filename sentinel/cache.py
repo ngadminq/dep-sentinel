@@ -82,3 +82,18 @@ def http_json(url: str, body: dict | None = None, headers: dict | None = None, t
                 raise RuntimeError(f"{url}: {e}") from e
         time.sleep(2 ** attempt)
     raise AssertionError("unreachable")
+
+
+if __name__ == "__main__":     # python -m sentinel.cache FILE: print one recorded model call (question and answer)
+    import re
+    import sys
+    sys.stdout.reconfigure(encoding="utf-8")
+    rec = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    msgs = rec["request"]["messages"]
+    user = msgs[-1]["content"]
+    m = re.search(r"用户原话：(.*)", user)
+    answer = re.sub(r"<think>.*?</think>", "", rec["response"]["choices"][0]["message"]["content"], flags=re.S).strip()
+    print(f"模型 {rec['request']['model']} · 记录时间 {rec['recorded_at']} · {rec['elapsed_ms']} ms")
+    print(f"问题：{m.group(1) if m else user[:80]}")
+    print("回答：")
+    print(answer)
