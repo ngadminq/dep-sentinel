@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dep-sentinel"
+version = "0.2.0"
+description = "依赖漏洞分诊：读 Trivy / Grype 报告或直接扫代码，挑出今天必须修的，并在沙箱里验证修复"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+dependencies = []          # standard library only
+
+[project.scripts]
+dep-sentinel = "sentinel.__main__:main"
+
+[tool.setuptools]
+packages = ["sentinel"]

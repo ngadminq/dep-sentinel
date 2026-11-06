@@ -195,7 +195,7 @@ def _triage(args) -> None:
 
 def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8")
-    ap = argparse.ArgumentParser(prog="sentinel")
+    ap = argparse.ArgumentParser(prog="dep-sentinel")
     sub = ap.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("scan")
     s.add_argument("repos", nargs="+")

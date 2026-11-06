@@ -14,7 +14,10 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import ProxyHandler, Request, build_opener, urlopen
 
-ROOT = Path(os.environ.get("SENTINEL_CACHE", Path(__file__).resolve().parent.parent / "data" / "cache"))
+_CHECKOUT_CACHE = Path(__file__).resolve().parent.parent / "data" / "cache"   # recorded data shipped with the repo
+# running from a checkout -> reuse the recorded calls; installed with pip -> a per-user cache
+ROOT = Path(os.environ.get("SENTINEL_CACHE") or
+            (_CHECKOUT_CACHE if _CHECKOUT_CACHE.is_dir() else Path.home() / ".cache" / "dep-sentinel"))
 OFFLINE = os.environ.get("SENTINEL_OFFLINE") == "1"
 STATS: dict[str, dict[str, int]] = {}
 

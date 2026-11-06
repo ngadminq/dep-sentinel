@@ -14,7 +14,8 @@ from . import output, pipeline
 from .discover import find_projects
 from .intel import vkey
 
-STATE_FILE = Path(os.environ.get("SENTINEL_STATE", Path(os.environ.get("SENTINEL_CACHE", "data/cache")).parent / "state.json"))
+from .cache import ROOT as _CACHE_ROOT
+STATE_FILE = Path(os.environ.get("SENTINEL_STATE", _CACHE_ROOT.parent / "state.json"))
 RANK = {"white": 0, "yellow": 1, "red": 2}
 
 

@@ -1,6 +1,7 @@
 #!/bin/sh
 # 命令：
-#   eval [--offline] [--modes osv static full]   跑内置 14 个验证场景 + 4 个群聊问答
+#   triage /reports/<trivy|grype>.json [--fail-on-red]   读扫描器报告（代码挂在 /repos），挑出今天要修的
+#   eval [--offline] [--modes osv static full]   跑内置 15 个验证场景 + 4 个群聊问答
 #   scan /repos/* [--mode full] [--send]          扫描挂载进来的仓库，--send 推送钉钉
 #   ask "群里转来的文字" [--repos /repos/*]        回答“我们有没有事”
 #   fix /repos/* [--mode static]                  在隔离沙箱里预演修复，证明有效后生成补丁
@@ -27,6 +28,10 @@ case "$cmd" in
       shift
     fi
     exec python eval.py --out /out/eval "$@"
+    ;;
+  triage)
+    report="$1"; shift
+    exec python -m sentinel triage "$report" --root /repos --out /out/triage "$@"
     ;;
   scan)
     exec python -m sentinel scan --out /out/scan "$@"
@@ -65,6 +70,6 @@ case "$cmd" in
       --mode "${DEMO_MODE:-static}" --out /out/demo
     ;;
   *)
-    sed -n '2,9p' "$0"
+    sed -n '2,11p' "$0"
     ;;
 esac
