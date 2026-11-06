@@ -74,3 +74,19 @@ def by_project(entries: list[dict], projects: list[Path], root: Path) -> dict[Pa
                 groups.setdefault(proj, []).append(e)
                 break
     return groups
+
+
+if __name__ == "__main__":     # python -m sentinel.scanners REPORT.json: what the scanner reported, per file
+    import sys
+    from collections import Counter, defaultdict
+    sys.stdout.reconfigure(encoding="utf-8")
+    tool, entries = load(Path(sys.argv[1]))
+    per: dict[str, Counter] = defaultdict(Counter)
+    for e in entries:
+        per[e["path"].lstrip("/")][e["severity"].upper() or "UNKNOWN"] += 1
+    for path, c in sorted(per.items()):
+        print(f"{path:<44} {sum(c.values()):>3} 条  严重 {c['CRITICAL']} 高 {c['HIGH']} 中 {c['MEDIUM']} 低 {c['LOW']}")
+    total = Counter()
+    for c in per.values():
+        total.update(c)
+    print(f"{tool} 合计 {sum(total.values())} 条：严重 {total['CRITICAL']} 高 {total['HIGH']} 中 {total['MEDIUM']} 低 {total['LOW']}")

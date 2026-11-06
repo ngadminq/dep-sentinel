@@ -166,10 +166,9 @@ def _triage(args) -> None:
         projects.append({"project": result["repo"].name, "scanner_entries": len(ents), "findings": rows,
                          "message": output.dingtalk_markdown(result)["markdown"]["text"]})
         mine = [r for r in rows if r["by_scanner"]]
-        print(f"{result['repo'].name}: {tool} {len(ents)} 条 → 今天修 "
-              f"{sum(r['level'] == 'red' for r in mine)} / 本周 {sum(r['level'] == 'yellow' for r in mine)} "
-              f"/ 记录 {sum(r['level'] == 'white' for r in mine)}；扫描器没报、自己认出 {len(rows) - len(mine)} 条"
-              f"（今天修 {sum(r['level'] == 'red' for r in rows if not r['by_scanner'])}）")
+        extra_red = sum(r["level"] == "red" for r in rows if not r["by_scanner"])
+        print(f"{result['repo'].name:<15} {tool} 报 {len(ents):>2} 条 → 今天修 {sum(r['level'] == 'red' for r in mine)}"
+              f" ｜ 漏报补上 {len(rows) - len(mine)} 条，今天修 {extra_red}")
     # OpenVEX names products by package purl, not by project: one project's "not_affected" would hide the
     # same package+CVE in every other project. The merged file keeps a not_affected only when no project disagrees.
     def _key(st):
