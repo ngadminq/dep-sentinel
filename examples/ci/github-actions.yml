@@ -1,0 +1,53 @@
+# 复制到 .github/workflows/dep-sentinel.yml
+# Trivy 照常扫描，dep-sentinel 只在有“今天修”的条目时让检查变红。
+# 配了 LLM_BASE_URL 等仓库密钥时用完整模式（大模型 + 元宝搜索），否则用 static 模式。
+name: dep-sentinel
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 1 * * *"   # 每天 09:00（北京时间）再查一次，新漏洞不用等下次提交
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trivy 扫描
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scanners: vuln
+          format: json
+          output: trivy.json
+          exit-code: "0"        # 是否报红交给 dep-sentinel 决定
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 安装 dep-sentinel
+        run: pip install git+https://github.com/ngadminq/dep-sentinel.git
+
+      - name: 分诊
+        env:
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          YUANBAO_API_KEY: ${{ secrets.YUANBAO_API_KEY }}
+        run: |
+          mode=static
+          if [ -n "$LLM_BASE_URL" ] && [ -n "$YUANBAO_API_KEY" ]; then mode=full; fi
+          dep-sentinel triage trivy.json --root . --mode "$mode" --out triage --fail-on-red
+
+      - name: 上传分诊结果和 VEX
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dep-sentinel
+          path: |
+            trivy.json
+            triage/

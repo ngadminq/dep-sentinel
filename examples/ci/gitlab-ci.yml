@@ -1,0 +1,35 @@
+# 合并进项目的 .gitlab-ci.yml
+# Trivy 照常扫描，dep-sentinel 只在有“今天修”的条目时让流水线变红。
+# 在 Settings → CI/CD → Variables 里配了 LLM_BASE_URL、LLM_MODEL、LLM_API_KEY、YUANBAO_API_KEY
+# 时用完整模式（大模型 + 元宝搜索），否则用 static 模式。
+stages:
+  - scan
+  - triage
+
+trivy:
+  stage: scan
+  image:
+    name: aquasec/trivy:0.58.1
+    entrypoint: [""]
+  script:
+    - trivy fs --scanners vuln --format json --output trivy.json .
+  artifacts:
+    paths: [trivy.json]
+    expire_in: 7 days
+
+dep-sentinel:
+  stage: triage
+  image: python:3.12-slim
+  needs: [trivy]
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq git > /dev/null
+    - pip install -q git+https://github.com/ngadminq/dep-sentinel.git
+  script:
+    - |
+      mode=static
+      if [ -n "$LLM_BASE_URL" ] && [ -n "$YUANBAO_API_KEY" ]; then mode=full; fi
+      dep-sentinel triage trivy.json --root . --mode "$mode" --out triage --fail-on-red
+  artifacts:
+    when: always
+    paths: [triage/]
+    expire_in: 30 days

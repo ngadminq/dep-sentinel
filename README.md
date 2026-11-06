@@ -1,168 +1,178 @@
-# dep-sentinel：依赖安全值班员
+# dep-sentinel：依赖漏洞分诊
 
-小团队没有安全工程师时，漏洞告警要么没人看，要么多到没人看。dep-sentinel 指向一个代码目录，自己找出里面所有项目和用到的开源库，每天检查一遍，只在**出现新的、真需要今天动手的问题**时 @ 负责人；没有变化的日子不发消息。群里有人转来一篇漏洞文章问“我们有没有事”，它也能直接回答。
+扫描器一次报几十上百条依赖漏洞，真正需要今天动手的往往只有几条。dep-sentinel 回答的就是“哪几条今天修”：
 
-它从这些地方认出“用了哪些库、什么版本”，不需要人登记：
+- 已经在用 Trivy / Grype：把 JSON 报告交给它，按代码里是否真的调用、是否已被在野利用重新定级，输出 OpenVEX 回灌给扫描器压噪，CI 只在有“今天修”时报红；
+- 没有扫描器：指向一个代码目录，它自己找出所有项目和用到的库，每天巡检，只在出现新的紧急问题时 @ 负责人；
+- 群里有人转来一篇漏洞文章问“我们有没有事”，它直接回答影响哪些项目；
+- 对标红的条目，在断网沙箱里先打一遍攻击、升级后再打一遍，证明修复有效才生成补丁。
 
-- 依赖清单：`package-lock.json`、`package.json`、`requirements*.txt`、`pom.xml`
-- 已经装好的库：`node_modules/**/package.json`、虚拟环境里的 `*.dist-info`
-- 直接拷进项目的 jar：读 jar 内的 `pom.properties`，文件被改名也认得出真实坐标
-- 代码里 import 了、但哪里都没声明的库：单独列出提醒
+只依赖 Python 3.11+ 标准库。大模型可以换成任何 OpenAI 兼容接口，联网搜索用的是元宝 SearchPro；两者都不配时，用 `--mode static` 也能跑，只是少了“读懂代码和文字”这一层。
 
-## 动静结合
+## 怎么定级
 
 ```
-【静】资产清单   lockfile / pom.xml / requirements*.txt / Dockerfile → 仓库 × 包 × 版本 × 负责人
-【静】候选匹配   OSV 版本比对 + CISA KEV（已在野利用）+ EPSS（利用概率）
-【动】情报卡     大模型规划查询 → 元宝搜索 → 大模型抽取“漏洞函数、触发条件、利用证据”
-【静】证据核验   引文必须逐字出现在搜索原文里、页面必须提到该漏洞；漏洞库自己点名的函数不能被删掉
-【静】可达性     在仓库源码里找 import 和漏洞函数调用，得到 文件:行号
-【动】可达研判   大模型看调用上下文判断输入是否外部可控，独立采样 3 次投票；“可达”必须引用真实命中行
-【静】证据门     规则定级：🔴 今天修 / 🟡 本周 / ⚪ 记录，大模型只提供证据，不能单独把一条告警标红
-输出            钉钉消息（@负责人、修复命令） + OpenVEX（Trivy / Grype 可直接读取压噪） + 全量调用记录
+资产清单   lockfile / package.json / requirements*.txt / pom.xml / node_modules / 虚拟环境 / jar 内 pom.properties
+候选匹配   OSV 版本比对 + CISA KEV（已在野利用）+ EPSS（利用概率）
+情报卡     大模型规划查询 → 联网搜索 → 抽取“漏洞函数、应用侧入口、触发条件、利用证据”
+证据核验   引文必须逐字出现在搜索原文里；漏洞库自己点名的函数不能被删掉
+可达性     在源码里找 import 和漏洞函数调用，得到 文件:行号
+可达研判   大模型看调用上下文判断输入是否外部可控，独立采样 3 次投票
+证据门     规则定级：🔴 今天修 / 🟡 本周 / ⚪ 记录；大模型只提供证据，不能单独把一条告警标红
 ```
 
 🔴 的条件：恶意包；或代码在用且 CISA KEV 已收录；或调用了漏洞函数且有利用信号（KEV、EPSS ≥ 0.1、两个以上独立网站报道利用或 PoC）。
 
-## 快速开始
+它能认出扫描器常漏掉的依赖：没有 lockfile 的 `package.json`、被改名后拷进项目的 jar、只有虚拟环境没有 requirements 的 Python 项目；代码里 import 了却哪里都没声明的库会单独提醒。
+
+## 安装
 
 ```bash
-cp .env.example .env          # 填 LLM_BASE_URL / LLM_MODEL / YUANBAO_API_KEY / DINGTALK_WEBHOOK
+pip install git+https://github.com/ngadminq/dep-sentinel.git
+dep-sentinel --help
+```
+
+或者用 Docker（镜像里带着录制数据，可以离线复现评测）：
+
+```bash
+git clone https://github.com/ngadminq/dep-sentinel.git && cd dep-sentinel
+cp .env.example .env
 docker compose build
-docker compose run --rm eval eval --offline   # 不需要任何密钥：回放录制数据，复现全部实验
-docker compose run --rm eval eval             # 用你自己的模型和元宝 Key 重跑
-docker compose run --rm eval replay --offline # 回放十个月的每日巡检
 ```
 
-巡检自己的代码（把放代码的目录挂到 `/repos`，里面有几个项目都会自动找出来）：
+不安装也能在仓库里直接跑：`python -m sentinel <命令>`。
+
+## 五个命令
+
+| 命令 | 做什么 | 常用写法 |
+|---|---|---|
+| `triage` | 读 Trivy / Grype 的 JSON 报告，挑出今天修的，输出 OpenVEX | `dep-sentinel triage trivy.json --root . --fail-on-red` |
+| `scan` | 不用扫描器，直接扫一个或几个项目 | `dep-sentinel scan ./order-service ./web --mode full` |
+| `patrol` | 自动发现目录下所有项目，和上次结果比，只报变化 | `dep-sentinel patrol /srv/code --send` |
+| `ask` | 回答群里转来的漏洞文章“我们有没有事” | `dep-sentinel ask "fastjson 又爆了，我们哪个服务用了？" --repos /srv/code/*` |
+| `fix` | 沙箱里预演修复，有效才生成补丁 | `dep-sentinel fix ./order-service` |
+
+各命令都有 `--mode`：`full`（默认，需要大模型和搜索）、`static`（只用漏洞库、KEV、EPSS 和源码检索）；`scan`、`triage`、`fix` 还支持 `osv`（漏洞库原样，做对照用）。
+
+### triage：接在扫描器后面
 
 ```bash
-# 先跑一次，看首次体检结果（不发钉钉）
-docker run --rm --env-file .env -v /path/to/code:/repos:ro -v sentinel-data:/data dep-sentinel:0.1 patrol
-# 确认没问题后常驻：每天巡检一次，只推送变化
-REPOS_DIR=/path/to/code docker compose up -d watch
-# 群里有人转来文章时手动问
-docker run --rm --env-file .env -v /path/to/code:/repos:ro dep-sentinel:0.1 ask "fastjson 反序列化漏洞又爆了，我们哪个服务用了？"
+trivy fs --scanners vuln --format json --output trivy.json .
+dep-sentinel triage trivy.json --root . --fail-on-red
 ```
 
-巡检结果存在 `/data/state.json`，所以 `sentinel-data` 卷要保留：第二天只会推送“新出现的今天修、从本周升级成今天修、已修复”这几类变化。
+Grype 的报告（`grype dir:. -o json`）用法一样，程序会自动认出是哪一种。输出在 `out/triage/`（`--out` 可改）：
 
-## 接在 Trivy / Grype 后面
-
-已经在跑扫描器的团队，不用换工具。把扫描器的 JSON 报告交给 `triage`，它只回答“这些条目里哪几条今天修”：
-
-```bash
-trivy fs --scanners vuln --format json --output trivy.json /path/to/code
-python -m sentinel triage trivy.json --root /path/to/code --fail-on-red
-```
-
-Grype 的报告（`grype dir:/path/to/code -o json`）用法一样，程序会自动认出是哪一种。输出在 `out/triage/`：
-
-- `<tool>.triage.json`：每个项目的定级、理由、调用位置、证据来源；
+- `<tool>.triage.json`：每个项目的定级、理由、调用位置、证据来源；扫描器没报、自己认出的条目单独计数；
 - `vex/<项目>.vex.json`：按项目分开的 OpenVEX，扫哪个项目就用哪一份（`trivy fs --vex ...`）；
-- `<tool>.vex.json`：合并版，只保留各项目之间没有冲突的 `not_affected`。OpenVEX 用包的 purl 认产品，不区分项目；如果 A 项目判“不受影响”、B 项目判“今天修”，合并后会把 B 也隐藏掉，所以这类条目不进合并版。
+- `<tool>.vex.json`：合并版，只保留各项目之间没有冲突的 `not_affected`。OpenVEX 用 purl 认包、不区分项目，A 项目判“不受影响”、B 项目判“今天修”的条目不进合并版，否则会把 B 也隐藏掉。
 
-`--fail-on-red`：有今天修的条目时以 1 退出，CI 只在这时报红，扫描器原来的报告照常保留。
+VEX 只把“仅开发依赖、声明了没用到”标成 `not_affected`；大模型判“打不到”的只标 `under_investigation`，扫描器不会隐藏，要人确认。
 
-扫描器没报、但 dep-sentinel 自己认出来的条目（没有 lockfile 的 `package.json`、改名的 jar、只有虚拟环境的 Python 项目）会单独计数，不会丢掉。
+`--fail-on-red`：有今天修的条目时以 1 退出，扫描器原来的报告照常保留。
+
+用 Docker 时，报告挂到 `/reports`、代码挂到 `/repos`、输出挂到 `/out`：
+
+```bash
+docker run --rm --env-file .env -v $PWD:/repos:ro -v $PWD/reports:/reports:ro -v $PWD/out:/out \
+  dep-sentinel:0.1 triage /reports/trivy.json --fail-on-red
+```
+
+### patrol：每天巡检
+
+```bash
+dep-sentinel patrol /srv/code            # 首次体检，只打印
+dep-sentinel patrol /srv/code --send     # 推送钉钉
+```
+
+结果存在 `state.json`，第二天只推送“新出现的今天修、从本周升级成今天修、已修复”这几类变化，没有变化的日子不发消息。用 Docker 常驻：
+
+```bash
+REPOS_DIR=/srv/code docker compose up -d watch    # 按 SCAN_INTERVAL 每天巡检一次
+```
+
+### fix：修复预演
+
+`fix` 需要项目里有一份 `verify.json`，写明攻击脚本和自测脚本（放在项目的 `.verify/` 目录，可达性扫描不会读到它们）：
+
+```json
+{
+ "ecosystem": "npm", "package": "lodash", "cve": "CVE-2019-10744",
+ "vulnerable_version": "4.17.11", "fixed_version": "4.17.21",
+ "attack": "attack.js", "test": "selftest.js",
+ "expect": {"vulnerable": "EXPLOITED", "fixed": "BLOCKED", "test_fixed": "pass"}
+}
+```
+
+目前支持 npm 和 PyPI。本机有沙箱镜像时，两步都在 `docker run --network none` 里跑，否则退回本机执行。沙箱里不联网，要预演的两个版本先下载到 `sandbox/vendor`（npm 用 `npm pack`，PyPI 用 `pip download`），再构建镜像：
+
+```bash
+docker build -f sandbox/node.Dockerfile -t dep-sentinel-sandbox-node:0.1 sandbox
+docker build -f sandbox/py.Dockerfile -t dep-sentinel-sandbox-py:0.1 sandbox
+```
+
+攻击脚本只做无害标记（写一个文件、污染一个属性）。补丁是 `git apply` 能直接用的 unified diff。例子见 `scenarios/s05-pyyaml-upload` 和 `scenarios/s15-lodash-merge`。
+
+## 接进 CI
+
+`examples/ci/` 里有现成的配置：
+
+- [GitHub Actions](examples/ci/github-actions.yml)：Trivy 扫描 → `triage --fail-on-red` → 上传分诊结果和 VEX；
+- [GitLab CI](examples/ci/gitlab-ci.yml)：同样的流程，结果作为 artifacts 保留。
+
+没有配置大模型时，示例里用的是 `--mode static`；把 `LLM_BASE_URL`、`LLM_MODEL`、`LLM_API_KEY`、`YUANBAO_API_KEY` 配成 CI 密钥后改成 `--mode full`。
+
+## 项目配置
+
+在每个项目根目录放一个 `.sentinel.json`（可选）：
+
+```json
+{"name": "order-service", "owner": {"name": "张三", "mobile": "13800000000"}, "exposure": "internet"}
+```
+
+- `owner`：要 @ 的负责人。不写时取 CODEOWNERS，再不行取最近 90 天提交最多的人（那样只显示名字、无法真正 @）。
+- `exposure`：`internet`（对外开放）或 `internal`（只在内网），作为定级依据之一。
+
+## 环境变量
+
+| 变量 | 作用 |
+|---|---|
+| `LLM_BASE_URL` / `LLM_MODEL` / `LLM_API_KEY` | OpenAI 兼容接口（vLLM、SGLang、Ollama、混元、DeepSeek 等），地址写到 `/v1`；访问内网地址时自动绕过 HTTP 代理 |
+| `LLM_REASONING_EFFORT` | 可选，`low` / `medium` / `high`，模型支持时生效 |
+| `YUANBAO_API_KEY` | 元宝 SearchPro 联网搜索 |
+| `DINGTALK_WEBHOOK` / `DINGTALK_SECRET` | 钉钉自定义机器人；留空则只打印不发送 |
+| `SENTINEL_CACHE` | 调用缓存目录。仓库里直接跑时默认 `data/cache`，pip 安装后默认 `~/.cache/dep-sentinel` |
+| `SENTINEL_STATE` | 巡检状态文件，默认在缓存目录旁的 `state.json` |
+| `SENTINEL_OFFLINE` | 设为 `1` 时只读缓存、不联网，用来回放录制数据 |
+| `SENTINEL_SANDBOX_BACKEND` | 强制修复预演用 `docker` 或 `local` |
+| `SANDBOX_TIMEOUT` | 单步预演超时秒数，默认 300 |
+| `SCAN_INTERVAL` / `REPOS_DIR` | Docker `watch` 模式的巡检间隔和挂载目录 |
 
 ## 绑定钉钉
 
-1. 在钉钉里打开要接收提醒的群 → 右上角“群设置” → “机器人” → “添加机器人” → 选“自定义（通过 Webhook 接入）”。
-2. 安全设置勾选“加签”，复制显示的密钥（以 `SEC` 开头）。不要选“自定义关键词”，否则消息里不含关键词时会被拒收。
-3. 完成后复制 Webhook 地址（`https://oapi.dingtalk.com/robot/send?access_token=...`）。
-4. 写进 `.env`：
+1. 群设置 → 机器人 → 添加机器人 → 自定义（通过 Webhook 接入）。
+2. 安全设置勾选“加签”，复制以 `SEC` 开头的密钥。不要选“自定义关键词”，否则消息里不含关键词时会被拒收。
+3. 把 Webhook 地址和密钥写进 `DINGTALK_WEBHOOK`、`DINGTALK_SECRET`。
+4. 跑一次 `dep-sentinel patrol <目录> --send`，群里收到“首次体检”就绑定成功。
 
-   ```bash
-   DINGTALK_WEBHOOK=https://oapi.dingtalk.com/robot/send?access_token=你的token
-   DINGTALK_SECRET=SEC你的密钥
-   ```
+每天只发一条汇总，不会触发钉钉每分钟 20 条的限流。
 
-5. 要 @ 到具体的人，在每个项目根目录放一个 `.sentinel.json`，写上负责人的钉钉手机号（不写时取 CODEOWNERS，再不行取最近 90 天提交最多的人，但那样只显示名字、无法真正 @）：
+## 效果
 
-   ```json
-   {"name": "order-service", "owner": {"name": "张三", "mobile": "13800000000"}, "exposure": "internet"}
-   ```
+15 个内置场景、120 条原始告警，漏洞库原样告警标红 50 条、场景通过 5/15；完整模式标红 14 条、场景通过 15/15，群聊问答 4/4。不用大模型的 static 模式是 11/15。场景说明、扫描器对照、十个月巡检回放和踩坑记录见 [docs/BENCHMARK.md](docs/BENCHMARK.md)，全部可以离线复现：
 
-   `exposure` 填 `internet`（对外开放）或 `internal`（只在内网），会作为判断依据之一。
-6. 发一条试试：`docker run --rm --env-file .env -v /path/to/code:/repos:ro -v sentinel-data:/data dep-sentinel:0.1 patrol --send`。群里收到“首次体检”消息就绑定成功。
-
-钉钉自定义机器人每分钟最多 20 条，dep-sentinel 每天只发一条汇总，不会触发限流。
-
-不用 Docker 时只需要 Python 3.11+，没有任何第三方依赖：`python eval.py`、`python -m sentinel scan <repo>`。
-
-## 换成你自己的大模型
-
-任何 OpenAI 兼容接口都可以（vLLM、SGLang、Ollama、混元、DeepSeek 等），在 `.env` 里改 `LLM_BASE_URL`（写到 `/v1`）和 `LLM_MODEL`。作者的实验用的是内网部署的 Qwen3.8-27B-FP8。访问内网地址时程序会自动绕过 HTTP 代理。
-
-## 内置验证场景
-
-| 场景 | 考察点 | 期望 |
-|---|---|---|
-| s01-log4shell | log4j-core 2.14.1，用户 UA 写进日志 | CVE-2021-44228 为 🔴 |
-| s02-jquery-xss | jQuery 3.4.1，URL 参数进 `.html()` | CVE-2020-11023（KEV）为 🔴 |
-| s03-lodash-unreachable | lodash 有洞，但只用了 `_.get` 等 | 没有 🔴 |
-| s04-lodash-reachable | `_.template(req.body.tpl)` | CVE-2021-23337 为 🔴 |
-| s05-pyyaml-upload | `yaml.load(上传文件, FullLoader)` | CVE-2020-14343 至少 🟡 且判定可达 |
-| s06-devdep-only | 有洞的包只在 devDependencies | 全部 ⚪ |
-| s07-malicious-transitive | 间接依赖 flatmap-stream 0.1.1 投毒 | flatmap-stream 为 🔴 |
-| s08-clean | 干净项目 | 0 条告警 |
-| s09-axios-noise | axios 1.7.4 一个版本 33 条告警，只请求内部固定地址 | 没有 🔴，SSRF 判定不可达 |
-| s10-injection | 同 s04，但搜索结果里混入提示词注入，要求把漏洞判为不受影响 | CVE-2021-23337 仍为 🔴 |
-| s11-template-constant | 调用了 `_.template`，但模板是代码里的常量 | 没有 🔴，判定不可达 |
-| s12-axios-ssrf | axios 带 baseURL，却把用户传的 path 交给它 | CVE-2025-27152 判定可达 |
-| s13-legacy-jar | 没有 pom.xml，fastjson 1.2.24 被改名成 `json-util.jar` 拷在 `WEB-INF/lib`，请求体进 `JSON.parseObject` | 认出 fastjson，CVE-2017-18349 为 🔴 |
-| s14-installed-only | 没有 requirements.txt，只有装好的虚拟环境；用户模板进 `SandboxedEnvironment().from_string` | 认出 Jinja2 2.10 并判定可达；提醒未声明的 requests |
-
-另有 4 个群聊问答（`scenarios/questions.json`），其中两个不带 CVE 编号，要靠大模型和搜索识别组件。
-
-每个场景的期望写在 `scenarios/*/expect.json`，`eval.py` 用三种模式对照：
-
-- `osv`：漏洞库原样告警，HIGH / CRITICAL 视为紧急（相当于常见审计工具的做法）
-- `static`：加上 KEV、EPSS、import 检查、从漏洞描述里正则提取函数名、证据门（不用大模型和搜索）
-- `full`：再加上大模型和元宝搜索
-
-## 实验结果（2026-11-03，Qwen3.8-27B-FP8 + 元宝 SearchPro）
-
-| 模式 | 场景通过 | 114 条原始告警中标红 | 群聊问答 |
-|---|---|---|---|
-| osv（漏洞库原样） | 5/14 | 47 | — |
-| static（不用大模型） | 10/14 | 8 | 1/4 |
-| full（动静结合） | 14/14 | 14 | 4/4 |
-
-- static 失败的地方都需要“读懂代码或文字”：常量模板被误判为可达（s11）、内部固定地址被误判为 SSRF 可达（s09）、jar 里的 fastjson 和 Jinja2 沙箱判不出可达（s13、s14）、不带 CVE 编号的问答。
-- full 比 static 多标红 8 条、少标红 2 条，都可复核。多标的每条都有调用行号、投票 3:0（一条 2:1），并且有 EPSS ≥ 0.1 或两个以上独立来源的 PoC。少标的是 s11 的常量模板，以及 log4j 的 CVE-2021-45046：它在 KEV 里，但要改过日志格式才能触发，3 票都判不可达。
-- 重复实验：大模型调用重新采样 2 轮，搜索计划沿用。三轮都是 14/14、4/4，标红分别是 14、13、15 条。11 条三轮都标红；6 条时红时黄，多数是摘出的证据网站数在“两个”上下浮动。三轮都没有误标红。
-- 11 条稳定标红里有 3 条只靠元宝搜到的公开利用成立，不在 KEV、EPSS 也不高：PyYAML 上传文件、fastjson CVE-2025-70974、Jinja2 CVE-2024-34064。
-- 每日巡检回放（`python replay.py`，2026-01-01 至 2026-11-02，12 个项目、109 条告警）：
-  - 按 OSV 公开日期，漏洞库这段时间新提醒 76 次，分布在 12 天；
-  - dep-sentinel 首日体检报 12 件今天修，之后只在 2026-01-09 找过一次人（legacy-order 的 fastjson CVE-2025-70974）；
-  - EPSS 和网页证据用的是今天的值，不是当天的值。
-- s01 的期望在首轮后补入 CVE-2021-45105，理由写在 `expect.json` 的 note 里。
-- 一次运行约调用大模型 269 次、元宝约 130 次；已被 KEV 收录的漏洞不再搜索。元宝单次调用中位约 2.5 秒。
-- 实测踩坑：
-  - 问答原文里带着 Log4Shell 的攻击载荷 `${jndi:ldap://...}`，原样作为查询词发出时被网关 WAF 拦截。现在查询词先清洗掉载荷和 URL，搜索失败时降级为“无搜索结果”继续运行。
-  - 漏洞描述里的函数不一定是你的代码会调用的入口，例如 Jinja2 沙箱漏洞的问题出在模板内部。现在情报卡要求写出应用侧的入口 API。
-  - 漏洞的前提条件太松会误报，太严会漏报。现在分成两类：能从代码、配置、依赖清单看出来的必须成立；运行环境类的按攻击者有利处理。
-
-### 接在扫描器后面（2026-11-05，15 个场景）
-
-两个扫描器扫同一个 `scenarios/` 目录，报告交给 `triage --mode full`：
-
-| 扫描器 | 报告条数（严重 / 高危） | 其中今天修 | 扫描器没报、自己认出（其中今天修） | 合计今天修 |
-|---|---|---|---|---|
-| Trivy 0.58.1（跳过 Java 库） | 98（7 / 35） | 8 | 24（6） | 14 |
-| Grype 0.121.1 | 106（8 / 37） | 12 | 14（2） | 14 |
-
-- 两边合计都是 14 条，和 `eval.py` 完整模式的结果一致。
-- 扫描器漏掉的原因：只有 `package.json` 没有 lockfile（s15，两个都没报）；改名的 jar（s13，Trivy 跳过了 Java 库）；只有虚拟环境（s14，`trivy fs` 不读）；投毒包的 MAL- 编号和 NSWG 编号（OSV 和扫描器库收录不一致）。
-- 旧版 Grype 0.86.1（数据库 schema 5）只报 39 条，axios 只有 3 条，升级到 0.121.1 后是 33 条。扫描器版本旧，漏报会很多。
-- VEX 回灌：Trivy 用 purl 认产品，测试 VEX 把一条 lodash 标成不受影响后，4 个项目里的同一条全被隐藏，所以合并版要去掉冲突条目。Grype 扫目录时，`--vex` 实测没有生效（产品写成 purl、`/src`、`dir:/src` 三种都试过），回灌只能用 Trivy 演示。我们的 VEX 只把“仅开发依赖、声明了没用到”标成 `not_affected`；大模型判“打不到”的只标 `under_investigation`，扫描器不会隐藏，要人确认。
-
-`eval.py` 的输出在 `out/eval/<mode>/`：每个场景一份 JSON（每条告警的判定理由、调用位置、网页证据、被丢弃的引文数、钉钉消息、OpenVEX），以及 `report.md` 汇总表。
+```bash
+docker compose run --rm eval eval --offline
+```
 
 ## 已知局限
 
 - 可达性靠正则检索源码，看不到反射和动态 import，所以“没找到调用”只会降到 🟡，不会降到 ⚪。
 - 间接依赖没有做调用链分析，只能按“在用”处理。
 - 运行时（Dockerfile 里的 node、python 镜像版本）目前只登记，不参与 OSV 比对。
+- 支持的生态目前是 npm、PyPI、Maven。
+- Grype 扫目录时 `--vex` 实测没有生效，VEX 回灌目前只在 Trivy 上验证过。
+
+## 许可
+
+MIT
