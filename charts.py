@@ -21,45 +21,93 @@ INK, MUTED, BLUE, RED = "#1f2328", "#8b949e", "#6e8fb5", "#d1242f"
 
 
 def timeline(out: Path) -> None:
-    """Fig 1: one time axis; bars = alerts the vulnerability database added that day, red dots = days we @ someone."""
+    """Fig: a calendar (one square per day). Blue shade = alerts the vulnerability database added that day;
+    a red frame = a day we @ someone. One glance shows how rare the red frames are."""
+    from matplotlib.patches import Rectangle
     data = json.loads((BASE / "out" / "replay.json").read_text(encoding="utf-8"))
     s, days = data["summary"], data["days"]
     assert (s["baseline_alerts"], s["baseline_alert_days"]) == (79, 12)
     assert (s["first_day_red_items"], s["later_message_days"]) == (12, 1)
-    alert_days = [(date.fromisoformat(d["date"]), d["baseline_alerts"]) for d in days if d["baseline_alerts"]]
-    msg_days = [(date.fromisoformat(d["date"]), d["red_items"]) for d in days if d["sentinel_messages"]]
-    assert sum(n for _, n in alert_days) == 79 and len(msg_days) == 2
-    start, end = date.fromisoformat(s["start"]), date.fromisoformat(s["end"])
+    start = date.fromisoformat(s["start"])
+    first_col = start - timedelta(days=start.weekday())          # Monday of the first week
+    shades = [(0, "#ebedf0"), (1, "#c6dbef"), (3, "#6baed6"), (10, "#2171b5"), (20, "#08306b")]
 
-    fig, ax = plt.subplots(figsize=(10, 4.2), dpi=120)
-    ax.bar([d for d, _ in alert_days], [n for _, n in alert_days], width=3, color=BLUE, label="漏洞库当天新增的告警")
-    for i, (d, n) in enumerate(alert_days):
-        near = i + 1 < len(alert_days) and (alert_days[i + 1][0] - d).days < 8
-        ax.text(d, n + 0.6, str(n), ha="right" if near else "center", va="bottom", fontsize=10, color=INK)
-    top = max(n for _, n in alert_days) * 1.35
-    for d, items in msg_days:
-        first = d == start
-        assert first or items == ["legacy-order:CVE-2025-70974"]
-        ax.axvline(d, color=RED, lw=1.4, ls="--", zorder=1, label="需要 @ 负责人的日子" if first else None)
-        ax.annotate(f"首次体检：{len(items)} 件今天修" if first else f"{d.month} 月 {d.day} 日：fastjson 新漏洞",
-                    (d, top * (0.95 if first else 0.84)), xytext=(30 if first else 8, 0), textcoords="offset points",
-                    va="center", fontsize=11, color=RED)
-    ax.set_ylim(0, top)
-    ax.set_ylabel("新增告警（条）", fontsize=11, color=INK)
-    ax.xaxis.set_major_locator(mdates.MonthLocator())
-    ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{mdates.num2date(x).month} 月"))
-    ax.set_xlim(start - timedelta(days=6), end + timedelta(days=3))
-    ax.set_xlabel("2026 年（每天检查一次）", fontsize=11, color=INK)
-    for side in ("top", "right"):
-        ax.spines[side].set_visible(False)
-    ax.tick_params(colors=MUTED, labelsize=10)
-    ax.legend(loc="center right", frameon=False, fontsize=10)
+    def shade(n):
+        return [c for lo, c in shades if n >= lo][-1]
+
+    fig, ax = plt.subplots(figsize=(10, 2.9), dpi=120)
+    total, reds = 0, []
+    for d in days:
+        day = date.fromisoformat(d["date"])
+        col, row = (day - first_col).days // 7, day.weekday()
+        ax.add_patch(Rectangle((col, -row), 0.86, 0.86, color=shade(d["baseline_alerts"]), lw=0))
+        total += d["baseline_alerts"]
+        if d["sentinel_messages"]:
+            reds.append((col, row, day, d["red_items"]))
+            ax.add_patch(Rectangle((col - 0.08, -row - 0.08), 1.02, 1.02, fill=False, ec=RED, lw=2.2))
+    assert total == 79 and len(reds) == 2
+    ncol = (date.fromisoformat(s["end"]) - first_col).days // 7 + 1
+    for m in range(1, 12):
+        col = (date(2026, m, 1) - first_col).days // 7
+        if col < ncol:
+            ax.text(col, 1.25, f"{m} 月", fontsize=10, color=MUTED)
+    for row, name in ((0, "一"), (2, "三"), (4, "五")):
+        ax.text(-0.6, -row + 0.43, name, fontsize=9, color=MUTED, ha="right", va="center")
+    (c1, r1, d1, items1), (c2, r2, d2, items2) = reds
+    assert items2 == ["legacy-order:CVE-2025-70974"]
+    ax.annotate(f"首次体检：{len(items1)} 件今天修", (c1 + 0.2, -r1 - 0.15), xytext=(-1, -9),
+                fontsize=10.5, color=RED, arrowprops={"arrowstyle": "-", "color": RED, "lw": 0.8})
+    ax.annotate(f"{d2.month} 月 {d2.day} 日：fastjson 新漏洞", (c2 + 0.6, -r2 - 0.15), xytext=(9.5, -9),
+                fontsize=10.5, color=RED, arrowprops={"arrowstyle": "-", "color": RED, "lw": 0.8})
+    labels = ["0", "1-2", "3-9", "10-19", "20+"]
+    lx = ncol - 17
+    ax.text(lx - 0.5, -8.55, "当天新增告警", fontsize=9.5, color=MUTED, ha="right", va="center")
+    for k, ((lo, c), lab) in enumerate(zip(shades, labels)):
+        ax.add_patch(Rectangle((lx + k * 2, -9), 0.86, 0.86, color=c, lw=0))
+        ax.text(lx + k * 2 + 0.43, -9.5, lab, fontsize=8.5, color=MUTED, ha="center", va="top")
+    ax.add_patch(Rectangle((lx + 10.6, -9), 0.86, 0.86, fill=False, ec=RED, lw=2.2))
+    ax.text(lx + 11.8, -8.55, "要 @ 负责人", fontsize=9.5, color=RED, va="center")
+    ax.set_xlim(-1.2, ncol + 0.5)
+    ax.set_ylim(-10.6, 2)
+    ax.set_aspect("equal")
+    ax.axis("off")
     fig.savefig(out / "fig01-replay-timeline.png", bbox_inches="tight", facecolor="white")
 
 
+def _squarify(values: list[float], x: float, y: float, w: float, h: float) -> list[tuple]:
+    """Squarified treemap layout (Bruls et al.): values sorted descending -> list of (x, y, w, h)."""
+    rects, vals = [], list(values)
+    while vals:
+        short = min(w, h)
+        row, best = [], float("inf")
+        for v in vals:
+            trial = row + [v]
+            s_ = sum(trial)
+            worst = max(short * short * max(trial) / (s_ * s_), s_ * s_ / (short * short * min(trial)))
+            if worst > best:
+                break
+            row, best = trial, worst
+        total = sum(row)
+        if w >= h:                      # lay the row out as a column on the left
+            cw = total / h
+            yy = y
+            for v in row:
+                rects.append((x, yy, cw, v / cw)); yy += v / cw
+            x, w = x + cw, w - cw
+        else:                           # lay it out as a row on top
+            rh = total / w
+            xx = x
+            for v in row:
+                rects.append((xx, y, v / rh, rh)); xx += v / rh
+            y, h = y + rh, h - rh
+        vals = vals[len(row):]
+    return rects
+
+
 def vuln_types(out: Path) -> None:
-    """Fig 1b: what the 120 alerts are (type x severity), and how many of each type are today's fix."""
+    """Fig: what the 120 alerts are. Area = how many alerts of that type; red = how many of them are today's fix."""
     import collections, glob, os
+    from matplotlib.patches import Rectangle
     os.environ.setdefault("SENTINEL_OFFLINE", "1")
     from sentinel import intel
     from sentinel.vulntype import vuln_type
@@ -69,33 +117,32 @@ def vuln_types(out: Path) -> None:
     for r in rows:
         v = intel.osv_vuln(r["vuln"])
         t = vuln_type((v.get("database_specific") or {}).get("cwe_ids"), r["malware"])
-        by[t][r["severity"] or "未评级"] += 1
-        by[t]["今天修"] += r["level"] == "red"
-    assert sum(sum(c[k] for k in c if k != "今天修") for c in by.values()) == len(rows) == 120
-    assert sum(c["今天修"] for c in by.values()) == 14
-    order = sorted(by, key=lambda t: -sum(by[t][k] for k in by[t] if k != "今天修"))
-    sevs = [("CRITICAL", "严重", "#8b1a1a"), ("HIGH", "高", RED), ("MODERATE", "中", "#e8a33d"),
-            ("LOW", "低", "#c9d1d9"), ("未评级", "未评级", "#eeeeee")]
-    fig, ax = plt.subplots(figsize=(10, 4.6), dpi=120)
-    for i, t in enumerate(order):
-        left = 0
-        for key, label, color in sevs:
-            n = by[t][key]
-            if n:
-                ax.barh(i, n, left=left, color=color, height=0.62, label=label if i == 0 or label not in
-                        [h.get_label() for h in ax.patches[:-1]] else None)
-                left += n
-        ax.text(left + 0.6, i, f"{left} 条，今天修 {by[t]['今天修']}", va="center", fontsize=10.5, color=INK)
-    handles = [plt.Rectangle((0, 0), 1, 1, color=c) for _, _, c in sevs[:4]]
-    ax.legend(handles, [l for _, l, _ in sevs[:4]], title="漏洞库评级", loc="lower right", frameon=False, fontsize=10)
-    ax.set_yticks(range(len(order)))
-    ax.set_yticklabels(order, fontsize=11, color=INK)
-    ax.invert_yaxis()
-    ax.set_xlim(0, 52)
-    ax.set_xlabel("告警条数", fontsize=11, color=INK)
-    for side in ("top", "right"):
-        ax.spines[side].set_visible(False)
-    ax.tick_params(colors=MUTED, labelsize=10, length=0)
+        by[t]["n"] += 1
+        by[t]["high"] += r["severity"] in ("HIGH", "CRITICAL")
+        by[t]["red"] += r["level"] == "red"
+    assert sum(c["n"] for c in by.values()) == len(rows) == 120
+    assert sum(c["red"] for c in by.values()) == 14 and by["原型污染"]["n"] == 38 and by["原型污染"]["red"] == 1
+    order = sorted(by, key=lambda t: -by[t]["n"])
+    W, H = 100.0, 56.0
+    rects = _squarify([by[t]["n"] * W * H / 120 for t in order], 0, 0, W, H)
+    reds = ["#f1efe8", "#f7c1c1", "#f09595", "#e24b4a", "#a32d2d"]
+    fig, ax = plt.subplots(figsize=(10, 5.6), dpi=120)
+    for t, (x, y, w, h) in zip(order, rects):
+        c = by[t]
+        color = reds[min(c["red"], 4)] if c["red"] else reds[0]
+        ax.add_patch(Rectangle((x, y), w, h, facecolor=color, edgecolor="white", lw=3))
+        ink = "white" if c["red"] >= 3 else INK
+        big, narrow = w * h > 600, w < 16
+        ax.text(x + 1.4, y + h - 2.2, t, fontsize=13 if big else (9.5 if narrow else 10.5), color=ink, va="top",
+                weight="bold")
+        ax.text(x + 1.4, y + h - (6.2 if big else 5.4), f"{c['n']} 条，高危以上 {c['high']}",
+                fontsize=10.5 if big else (8 if narrow else 9), color=ink, va="top")
+        ax.text(x + 1.4, y + 2.0, f"今天修 {c['red']}", fontsize=12 if big else 10, color=ink, va="bottom",
+                weight="bold" if c["red"] else "normal")
+    ax.set_xlim(0, W)
+    ax.set_ylim(0, H)
+    ax.set_aspect("equal")
+    ax.axis("off")
     fig.savefig(out / "fig01b-vuln-types.png", bbox_inches="tight", facecolor="white")
 
 
