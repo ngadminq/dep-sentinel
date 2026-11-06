@@ -98,5 +98,10 @@ if __name__ == "__main__":     # python -m sentinel.cache FILE: print one record
     answer = re.sub(r"<think>.*?</think>", "", rec["response"]["choices"][0]["message"]["content"], flags=re.S).strip()
     print(f"模型 {rec['request']['model']} · 记录时间 {rec['recorded_at']} · {rec['elapsed_ms']} ms")
     print(f"问题：{m.group(1) if m else user[:80]}")
+    pages = re.findall(r"\n\[(\d+)\] ([^\n]+)", user)
+    if pages:
+        print(f"一起交给它的网页（{len(pages)} 个）：")
+        for i, title in pages:
+            print(f"  [{i}] {title[:46]}")
     print("回答：")
     print(answer)

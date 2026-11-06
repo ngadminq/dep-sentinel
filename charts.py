@@ -158,7 +158,7 @@ def ablation(out: Path) -> None:
 
     fig, axes = plt.subplots(1, 2, figsize=(10, 3.8), dpi=120, gridspec_kw={"wspace": 0.35})
     colors = ["#c9d1d9", BLUE, RED]
-    for ax, idx, title, top in ((axes[0], 1, "场景通过（共 15 个）", 15), (axes[1], 3, "标成“今天修”（共 120 条）", 50)):
+    for ax, idx, title, top in ((axes[0], 1, "判对的项目（共 15 个）", 15), (axes[1], 3, "标成“今天修”（共 120 条）", 50)):
         vals = [r[idx] for r in rows]
         ax.barh([r[0] for r in rows], vals, color=colors, height=0.55)
         for i, v in enumerate(vals):
